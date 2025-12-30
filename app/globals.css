@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  /* Rebranded Theme: Caravansales Blue + Dark Slate */
+  --color-background: #020617;
+  /* Slate 950 (Dark Navy) */
+  --color-surface: #0f172a;
+  /* Slate 900 */
+  --color-surface-highlight: #1e293b;
+  /* Slate 800 */
+
+  --color-foreground: #f8fafc;
+  /* Slate 50 */
+  --color-muted: #94a3b8;
+  /* Slate 400 */
+
+  --color-primary: #0073E3;
+  /* Caravansales Blue */
+  --color-primary-hover: #005BB3;
+  /* Darker Blue */
+  --color-primary-foreground: #ffffff;
+
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-outfit);
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
+/* Base Styles */
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Glassmorphism Utilities */
+@utility glass-panel {
+  background: rgba(15, 23, 42, 0.6);
+  /* Slate tint */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@utility glass-button {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(0, 115, 227, 0.5);
+    /* Blue tint */
+  }
+}

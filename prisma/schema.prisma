@@ -1,0 +1,198 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Tender {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String   @default("OPEN")
+  
+  // Targeted Dealers (Comma separated IDs)
+  selectedDealerIds String? 
+
+  // Customer Info
+  customerName     String?
+  customerEmail    String?
+  customerPostcode String?
+  
+  // Requirement Fields
+  tow_vehicle      String?
+  type             String?
+  length           String?
+  frame            String?
+  
+  // Off-Grid
+  solar            String?
+  batteries        String?
+  inverter         String?
+  water_tanks      String?
+  
+  // Features
+  external_shower  String?
+  hot_water        String?
+  toilet           String?
+  fridge_size      String?
+  fridge_type      String?
+  appliances       String // JSON array of IDs
+  
+  ac               String?
+  diesel_heater    String?
+  bed              String?
+  kids_beds        String?
+  fixtures         String?
+  outdoor_kitchen  String? // JSON array
+  electric_awning  String?
+  auto_level       String?
+  
+  final_comments   String?
+  custom_notes     String? // JSON map of field specific notes
+  
+  // Budget / Timeline
+  targetDate       String?
+  
+  // Relations
+  clientId         String?
+  client           Client? @relation(fields: [clientId], references: [id])
+  quotes           Quote[]
+}
+
+model Dealer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  company   String
+  phone     String?
+  website   String?
+  location  String?
+  logo      String?
+  abn       String?
+  acn       String?
+  
+  subscriptionTier String @default("FREE") // FREE or PRO
+  
+  quotes    Quote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Subscription Fields
+  subscriptionStatus String   @default("TRIAL") // 'TRIAL', 'ACTIVE', 'PAST_DUE', 'CANCELED'
+  planTier           String   @default("STARTER") // 'STARTER', 'GROWTH', 'PRO', 'UNLIMITED'
+  quotesUsedThisMonth Int     @default(0)
+  hasUsedTrial       Boolean  @default(false)
+  marketIntel        Boolean  @default(false) // $29.99 Add-on
+  trialEndsAt        DateTime? 
+  discountEndsAt     DateTime? // When the 50% off period ends
+  stripeCustomerId   String?
+  stripeSubscriptionId String? @unique
+  
+  // Auth Recovery
+  resetToken         String?
+  resetTokenExpiry   DateTime?
+
+  listings           UsedCaravan[]
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  phone     String
+  location  String
+  
+  // Usage Limits
+  freeTendersUsed Int      @default(0)
+  tenderCount     Int      @default(0) // Legacy field, keeping for now
+  
+  // Auth Recovery
+  resetToken         String?
+  resetTokenExpiry   DateTime?
+  
+  tenders   Tender[]
+  listings  UsedCaravan[]
+  createdAt DateTime @default(now())
+}
+
+model Quote {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  price       String
+  description String // Pitch or details
+  
+  tenderId  String
+  tender    Tender @relation(fields: [tenderId], references: [id])
+  
+  dealerId  String
+  dealer    Dealer @relation(fields: [dealerId], references: [id])
+  
+  status    String @default("SENT") // SENT, VIEWED, ACCEPTED, REJECTED
+}
+
+model UsedCaravan {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  category    String
+  condition   String   @default("Used") // New, Used, Demo
+  year        Int
+  make        String
+  model       String
+  length      Float
+  sleeps      String
+  price       Float
+  description String
+  images      String
+  
+  sellerName  String
+  sellerEmail String
+  sellerPhone String
+  location    String
+  status      String @default("PENDING") // PENDING, APPROVED, SOLD, EXPIRED
+  viewCount   Int    @default(0)
+  expiresAt   DateTime?
+  reminderSent Boolean @default(false)
+  
+  // Relation
+  clientId    String?
+  client      Client? @relation(fields: [clientId], references: [id])
+  
+  dealerId    String?
+  dealer      Dealer? @relation(fields: [dealerId], references: [id])
+  
+  enquiries   Enquiry[]
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  name      String
+  email     String
+  phone     String?
+  message   String
+  status    String   @default("NEW") // NEW, READ, CONTACTED
+
+  listingId String
+  listing   UsedCaravan @relation(fields: [listingId], references: [id])
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  ip        String   @unique
+  attempts  Int      @default(0)
+  lockedUntil DateTime?
+  updatedAt DateTime @updatedAt
+}
