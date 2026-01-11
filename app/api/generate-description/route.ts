@@ -1,4 +1,3 @@
-```typescript
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -10,15 +9,23 @@ export async function POST(request: Request) {
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
         });
-            const prompt = `
-        Write a high - converting, professional sales description for a caravan with these details:
-    - Condition: ${ condition }
-- Year: ${ year }
-- Make: ${ make }
-- Model: ${ model || 'Standard' }
-- Category: ${ category || 'Caravan' }
-- Length: ${ length ? length + 'ft' : 'Standard' }
-- Sleeps: ${ sleeps }
+
+        const { make, model, year, category, length, sleeps, condition } = await request.json();
+
+        // Basic validation
+        if (!make || !year) {
+            return NextResponse.json({ error: 'Make and Year are required' }, { status: 400 });
+        }
+
+        const prompt = `
+        Write a high-converting, professional sales description for a caravan with these details:
+    - Condition: ${condition}
+- Year: ${year}
+- Make: ${make}
+- Model: ${model || 'Standard'}
+- Category: ${category || 'Caravan'}
+- Length: ${length ? length + 'ft' : 'Standard'}
+- Sleeps: ${sleeps}
 
 Tone: Enthusiastic, trustworthy, and premium.
     Structure:
@@ -30,21 +37,21 @@ Tone: Enthusiastic, trustworthy, and premium.
         Keep it under 200 words.Do not include placeholders like "[Insert Phone Number]".
         `;
 
-            const completion = await openai.chat.completions.create({
-                model: "gpt-4o-mini", // Cost efficient and fast
-                messages: [
-                    { role: "system", content: "You are an expert caravan sales copywriter." },
-                    { role: "user", content: prompt }
-                ],
-                temperature: 0.7,
-            });
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini", // Cost efficient and fast
+            messages: [
+                { role: "system", content: "You are an expert caravan sales copywriter." },
+                { role: "user", content: prompt }
+            ],
+            temperature: 0.7,
+        });
 
-            const description = completion.choices[0].message.content;
+        const description = completion.choices[0].message.content;
 
-            return NextResponse.json({ description });
+        return NextResponse.json({ description });
 
-        } catch (error: any) {
-            console.error("AI Generation Error:", error);
-            return NextResponse.json({ error: error.message || 'Failed to generate description' }, { status: 500 });
-        }
+    } catch (error: any) {
+        console.error("AI Generation Error:", error);
+        return NextResponse.json({ error: error.message || 'Failed to generate description' }, { status: 500 });
     }
+}
