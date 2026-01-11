@@ -1,3 +1,6 @@
+```typescript
+import { NextResponse } from 'next/server';
+
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
@@ -7,32 +10,24 @@ export async function POST(request: Request) {
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
         });
-        try {
-            const { make, model, year, category, length, sleeps, condition } = await request.json();
-
-            // Basic validation
-            if (!make || !year) {
-                return NextResponse.json({ error: 'Make and Year are required' }, { status: 400 });
-            }
-
             const prompt = `
-        Write a high-converting, professional sales description for a caravan with these details:
-        - Condition: ${condition}
-        - Year: ${year}
-        - Make: ${make}
-        - Model: ${model || 'Standard'}
-        - Category: ${category || 'Caravan'}
-        - Length: ${length ? length + 'ft' : 'Standard'}
-        - Sleeps: ${sleeps}
+        Write a high - converting, professional sales description for a caravan with these details:
+    - Condition: ${ condition }
+- Year: ${ year }
+- Make: ${ make }
+- Model: ${ model || 'Standard' }
+- Category: ${ category || 'Caravan' }
+- Length: ${ length ? length + 'ft' : 'Standard' }
+- Sleeps: ${ sleeps }
 
-        Tone: Enthusiastic, trustworthy, and premium.
-        Structure:
-        1. A catchy headline.
-        2. A paragraph highlighting the lifestyle/adventure potential.
+Tone: Enthusiastic, trustworthy, and premium.
+    Structure:
+1. A catchy headline.
+        2. A paragraph highlighting the lifestyle / adventure potential.
         3. A bulleted list of why this specific model is great.
         4. A call to action.
         
-        Keep it under 200 words. Do not include placeholders like "[Insert Phone Number]".
+        Keep it under 200 words.Do not include placeholders like "[Insert Phone Number]".
         `;
 
             const completion = await openai.chat.completions.create({
