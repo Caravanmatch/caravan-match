@@ -30,7 +30,7 @@ export default async function LeadsPage() {
                 select: { name: true, location: true } // Privacy: Don't show full details until quoted?
             },
             quotes: {
-                select: { dealerId: true }
+                select: { dealerId: true, price: true }
             }
         }
     });

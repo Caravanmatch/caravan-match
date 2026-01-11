@@ -39,7 +39,11 @@ export async function POST(request: Request) {
                 discounts: [{ coupon: '50OFF3M' }], // Then 50% off for 3 Months (Coupon applies after trial)
                 success_url: `${request.headers.get('origin')}/dealer/dashboard?success=true&tier=${tier}`,
                 cancel_url: `${request.headers.get('origin')}/dealer/subscription?canceled=true`,
-                metadata: { dealerId: dealer.id, tier: tier }
+                metadata: {
+                    dealerId: dealer.id,
+                    tier: tier,
+                    marketIntel: marketIntel ? 'true' : 'false'
+                }
             });
 
             return NextResponse.json({ url: session.url });

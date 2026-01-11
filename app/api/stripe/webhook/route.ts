@@ -47,7 +47,8 @@ export async function POST(request: Request) {
                     planTier: session.metadata?.tier || 'STARTER',
                     stripeCustomerId: session.customer as string,
                     stripeSubscriptionId: session.subscription as string,
-                    hasUsedTrial: true
+                    hasUsedTrial: true,
+                    marketIntel: session.metadata?.marketIntel === 'true'
                 }
             });
 

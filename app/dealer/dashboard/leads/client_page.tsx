@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import RankingBar from "@/app/components/ui/RankingBar";
+
 export default function LeadsClient({ dealer, tenders }: { dealer: any, tenders: any[] }) {
     const router = useRouter();
     const [selectedLead, setSelectedLead] = useState<any | null>(null);
@@ -17,9 +19,16 @@ export default function LeadsClient({ dealer, tenders }: { dealer: any, tenders:
                     <h1 className="text-3xl font-heading font-bold gradient-text">Lead Inbox 📬</h1>
                     <p className="text-zinc-400">Real families looking for caravans right now.</p>
                 </div>
-                <div className="bg-surface border border-white/10 px-4 py-2 rounded-lg">
-                    <span className="text-sm text-zinc-400">Your Plan: </span>
-                    <span className="font-bold text-primary">{dealer.planTier}</span>
+                <div className="flex items-center gap-4">
+                    {dealer.marketIntel && (
+                        <span className="text-xs bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full border border-indigo-500/50 flex items-center gap-1">
+                            🧠 Market Intel Active
+                        </span>
+                    )}
+                    <div className="bg-surface border border-white/10 px-4 py-2 rounded-lg">
+                        <span className="text-sm text-zinc-400">Your Plan: </span>
+                        <span className="font-bold text-primary">{dealer.planTier}</span>
+                    </div>
                 </div>
             </div>
 
@@ -38,8 +47,8 @@ export default function LeadsClient({ dealer, tenders }: { dealer: any, tenders:
                             key={lead.id}
                             onClick={() => setSelectedLead(lead)}
                             className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedLead?.id === lead.id
-                                    ? 'bg-primary/10 border-primary'
-                                    : 'bg-surface border-white/5 hover:border-white/20'
+                                ? 'bg-primary/10 border-primary'
+                                : 'bg-surface border-white/5 hover:border-white/20'
                                 }`}
                         >
                             <div className="flex justify-between items-start mb-2">
@@ -84,6 +93,17 @@ export default function LeadsClient({ dealer, tenders }: { dealer: any, tenders:
                                     </p>
                                 </div>
                             </div>
+
+                            {/* MARKET INTEL RANKING BAR */}
+                            {selectedLead.hasQuoted && (
+                                <RankingBar
+                                    myPrice={getMyPrice(selectedLead, dealer.id)}
+                                    competitorPrices={getCompetitorPrices(selectedLead, dealer.id)}
+                                    marketIntelEnabled={dealer.marketIntel}
+                                />
+                            )}
+
+                            {/* If Not Quoted - Show placeholder teaser ??? No, user said only "tender sent back to customer" i.e. quoted */}
 
                             <div className="space-y-4">
                                 <div className="bg-black/20 p-4 rounded-lg">
@@ -142,6 +162,19 @@ export default function LeadsClient({ dealer, tenders }: { dealer: any, tenders:
 }
 
 // Helpers
+function getMyPrice(lead: any, dealerId: string) {
+    // In real app, quotes would have price. For now randomizing or assuming present.
+    // The server query fetched quotes.
+    const myQuote = lead.quotes.find((q: any) => q.dealerId === dealerId);
+    return myQuote ? Number(myQuote.price) : 0;
+}
+
+function getCompetitorPrices(lead: any, dealerId: string) {
+    return lead.quotes
+        .filter((q: any) => q.dealerId !== dealerId)
+        .map((q: any) => Number(q.price));
+}
+
 function leadDescription(lead: any) {
     return lead.final_comments || lead.description || "No specific details provided.";
 }
