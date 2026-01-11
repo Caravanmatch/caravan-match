@@ -64,11 +64,10 @@ export default function DealerSubscriptionPage() {
                         key={tier.id}
                         className={`relative bg-surface rounded-2xl p-6 border flex flex-col ${tier.gradient || tier.color || 'border-white/10'} hover:scale-105 transition duration-300 shadow-xl`}
                     >
-                        {/* 50% Off Badge */}
-                        <div className="absolute -top-3 right-4 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg animate-pulse">
-                            50% OFF 6 Mths
+                        {/* 6 MONTHS FREE Badge */}
+                        <div className="absolute -top-3 right-4 bg-emerald-500 text-white text-xs font-bold px-2 py-1 rounded shadow-lg animate-pulse">
+                            6 MTHS FREE
                         </div>
-
                         {tier.popular && (
                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
                                 POPULAR
@@ -78,12 +77,12 @@ export default function DealerSubscriptionPage() {
                         <div className="mb-6">
                             <h3 className="text-lg font-medium text-muted uppercase tracking-wider">{tier.name}</h3>
                             <div className="flex flex-col mt-2">
-                                {/* Discounted Price Display */}
+                                {/* FREE Price Display */}
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-sm text-red-400 line-through decoration-white/50">${tier.price}</span>
-                                    <span className="text-3xl font-bold text-white">${(parseFloat(tier.price) / 2).toFixed(2)}</span>
+                                    <span className="text-3xl font-bold text-white uppercase">FREE</span>
                                 </div>
-                                <span className="text-xs text-green-400 font-bold">First 6 Months Offer</span>
+                                <span className="text-xs text-emerald-400 font-bold">First 6 Months, then 50% Off (3 Mo)</span>
                             </div>
                             <div className="mt-4 py-2 px-3 bg-white/5 rounded-lg text-center font-bold text-white">
                                 {tier.quotes}
@@ -103,7 +102,7 @@ export default function DealerSubscriptionPage() {
                             disabled={loading !== null}
                             className={`w-full py-3 rounded-xl font-bold transition ${tier.id === 'UNLIMITED' ? 'bg-white text-black hover:bg-zinc-200' : 'bg-primary hover:bg-primary-hover text-white'}`}
                         >
-                            {loading === tier.id ? 'Processing...' : `Select ${tier.name}`}
+                            {loading === tier.id ? 'Processing...' : `Start Free Trial`}
                         </button>
                     </div>
                 ))}
@@ -131,8 +130,8 @@ export default function DealerSubscriptionPage() {
             </div>
 
             <p className="mt-12 text-sm text-muted text-center leading-relaxed">
-                <span className="text-xl font-bold text-white block mb-2">🔥 Limited Time Offer: 50% OFF First 6 Months!</span>
-                Regular pricing resumes after 6 months. Cancel anytime.<br />
+                <span className="text-xl font-bold text-white block mb-2">🔥 Limited Time Offer: 6 Months FREE!</span>
+                Then 50% off for 3 months. Full price resumes after 9 months. Cancel anytime.<br />
                 <span className="text-primary font-bold">Offer valid for new subscribers only.</span>
             </p>
         </div>

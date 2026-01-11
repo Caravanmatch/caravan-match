@@ -11,6 +11,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
     const [mounted, setMounted] = useState(false);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     // Auth State
     const [user, setUser] = useState<any>(null);
@@ -32,7 +33,8 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
         email: dealer?.email || '',
         phone: dealer?.phone || '',
         suburb: '',
-        state: ''
+        state: '',
+        videoUrl: ''
     });
 
     // Validated photos state
@@ -79,12 +81,40 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
         setLoading(true);
 
         try {
+            // 0. Upload Photos
+            const uploadedImageUrls: string[] = [];
+            if (photos.length > 0) {
+                // Determine if we need to upload (File objects) or keep existing (Strings - if edit mode support added later)
+                // For now, photos check is simple.
+
+                // Show uploading status
+                // console.log("Uploading " + photos.length + " photos...");
+            }
+
+            for (const file of photos) {
+                const data = new FormData();
+                data.append('file', file);
+
+                const uploadRes = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: data
+                });
+
+                if (uploadRes.ok) {
+                    const blob = await uploadRes.json();
+                    uploadedImageUrls.push(blob.url);
+                } else {
+                    console.error("Failed to upload a photo");
+                }
+            }
+
             const url = isEditMode ? `/api/listings/${editId}` : '/api/listings';
             const method = isEditMode ? 'PUT' : 'POST';
 
             // Construct payload
             const payload = {
                 ...formData,
+                images: uploadedImageUrls,
                 location: `${formData.suburb}, ${formData.state}`.replace(/^, /, '').replace(/, $/, '') // Combine suburb and state
             };
 
@@ -130,6 +160,42 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
             alert("Error submitting form");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleGenerateDescription = async () => {
+        if (!formData.make || !formData.year) {
+            alert("Please enter at least the Year and Make first.");
+            return;
+        }
+
+        setIsGenerating(true);
+        try {
+            const res = await fetch('/api/generate-description', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    make: formData.make,
+                    model: formData.model,
+                    year: formData.year,
+                    condition: formData.condition,
+                    category: formData.category,
+                    length: formData.length,
+                    sleeps: formData.sleeps
+                })
+            });
+
+            const data = await res.json();
+            if (data.description) {
+                setFormData(prev => ({ ...prev, description: data.description }));
+            } else {
+                alert("Could not generate description. Please try again.");
+            }
+        } catch (e) {
+            console.error(e);
+            alert("AI Error: Check your connection.");
+        } finally {
+            setIsGenerating(false);
         }
     };
 
@@ -390,7 +456,16 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                         <h2 className="text-2xl font-bold border-b border-white/10 pb-4">2. Photos & Description</h2>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Description</label>
+                            <div className="flex justify-between items-center">
+                                <label className="text-sm font-medium">Description</label>
+                                <button
+                                    onClick={handleGenerateDescription}
+                                    disabled={isGenerating}
+                                    className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-full flex items-center gap-1 transition disabled:opacity-50"
+                                >
+                                    {isGenerating ? '✨ Magic Writing...' : '✨ Rewrite with AI'}
+                                </button>
+                            </div>
                             <textarea
                                 name="description"
                                 value={formData.description}
@@ -399,6 +474,19 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                                 placeholder="Describe the condition, upgrades, and history of your van..."
                                 className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
                             />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">YouTube/Video Link (Optional)</label>
+                            <input
+                                name="videoUrl"
+                                value={formData.videoUrl}
+                                onChange={handleInputChange}
+                                type="url"
+                                placeholder="https://youtu.be/..."
+                                className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
+                            />
+                            <p className="text-xs text-muted">Paste a link to a YouTube walkaround.</p>
                         </div>
 
                         <div className="space-y-4">
@@ -532,7 +620,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                                 disabled={loading}
                                 className={`flex-1 py-4 font-bold rounded-xl transition flex items-center justify-center gap-2 ${loading ? 'bg-zinc-700' : 'bg-primary hover:bg-primary-hover text-white'}`}
                             >
-                                {loading ? 'Processing...' : (dealer ? 'Publish Listing (Free) 🚀' : 'Pay $89 (6 Months) 🚀')}
+                                {loading ? 'Uploading Photos & Publishing...' : (dealer ? 'Publish Listing (Free) 🚀' : 'Pay $89 (6 Months) 🚀')}
                             </button>
                         </div>
                     </div>

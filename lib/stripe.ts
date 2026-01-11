@@ -9,11 +9,11 @@ export const stripe = new Stripe(apiKey, {
 });
 
 export const STRIPE_PRICES = {
-    DEALER_STARTER: 'price_1QVTm8GSCqjX1I8kP0K4hXvR', // Replace with real ID
-    DEALER_GROWTH: 'price_1QVTmkGSCqjX1I8kH0e1Qe1R', // Replace with real ID
-    DEALER_PRO: 'price_1QVTnDGSCqjX1I8kP0K4hXvR',    // Replace with real ID
-    DEALER_UNLIMITED: 'price_1QVTngGSCqjX1I8kP0K4hXvR', // Replace with real ID
+    DEALER_STARTER: 'price_1SoOViLVcRkh5L2w9OIeE6NR', // Starter ($134.99)
+    DEALER_GROWTH: 'price_1SoOWOLVcRkh5L2wayx7yYlZ', // Growth ($149.99)
+    DEALER_PRO: 'price_1SoOYzLVcRkh5L2wimsqi0NB',    // Unlimited ($209.98) - Note: Variable name is PRO but UI says Unlimited
+    DEALER_UNLIMITED: 'price_1SoOYzLVcRkh5L2wimsqi0NB', // Keeping both keys mapped to same ID to be safe if code uses different ones
     MARKET_INTEL: 'price_1QVTmpGSCqjX1I8kP0K4hXvR',
     // Sell Your Van (Free 30 days, then $15/mo)
-    PRIVATE_AD_RECURRING: 'price_1SgCqrLIY6h6o0gw5LqjByEv' // Recurring $15/mo
+    PRIVATE_AD_RECURRING: 'price_1SoOeLLVcRkh5L2wF0lUPI5u' // Recurring $15/mo
 };

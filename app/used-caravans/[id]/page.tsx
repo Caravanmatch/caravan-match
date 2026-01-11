@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         openGraph: {
             title: title,
             description: desc,
-            images: [listing.images || ''],
+            images: [listing.images && listing.images.length > 0 ? listing.images[0] : ''],
         },
     };
 }
@@ -101,8 +101,8 @@ export default async function ListingDetailPage({ params }: Props) {
                     </div>
 
                     {/* Client Gallery Component */}
-                    {/* Using mock array for now since DB only has single string image, ideally DB should have string[] */}
-                    <ListingGallery images={[listing.images || '']} />
+                    {/* Passed directly as array now */}
+                    <ListingGallery images={listing.images} />
 
                     {/* Description & Specs */}
                     <div className="space-y-8">
@@ -127,6 +127,24 @@ export default async function ListingDetailPage({ params }: Props) {
                             </p>
                         </div>
                     </div>
+
+                    {/* Video Section */}
+                    {listing.videoUrl && (
+                        <div className="space-y-4">
+                            <h3 className="font-bold text-lg flex items-center gap-2">
+                                <span>🎥</span> Video Tour
+                            </h3>
+                            <div className="aspect-video w-full rounded-2xl overflow-hidden border border-white/10 bg-black">
+                                <iframe
+                                    src={listing.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                                    title="Video Tour"
+                                    className="w-full h-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Right: Contact Form */}

@@ -38,12 +38,15 @@ export async function POST(request: Request) {
             sleeps: data.sleeps || "2",
             price: parseFloat(data.price) || 0,
             description: data.description || "",
-            images: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=800",
+            images: Array.isArray(data.images) && data.images.length > 0
+                ? data.images
+                : ["https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&q=80&w=800"],
             sellerName: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
             sellerEmail: data.email,
             sellerPhone: data.phone || "",
             location: data.location || "",
-            condition: data.condition || "Used" // Default to Used
+            condition: data.condition || "Used", // Default to Used
+            videoUrl: data.videoUrl || null
         };
 
         if (dealerId) {

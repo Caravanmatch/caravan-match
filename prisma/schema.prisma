@@ -154,7 +154,7 @@ model UsedCaravan {
   sleeps      String
   price       Float
   description String
-  images      String
+  images      String[]
   
   sellerName  String
   sellerEmail String
@@ -164,6 +164,7 @@ model UsedCaravan {
   viewCount   Int    @default(0)
   expiresAt   DateTime?
   reminderSent Boolean @default(false)
+  videoUrl     String?
   
   // Relation
   clientId    String?

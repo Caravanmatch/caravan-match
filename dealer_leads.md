@@ -55,7 +55,17 @@ Here is an expanded list of 53 Australian caravan manufacturers and their contac
 | Kedron Caravans | `sales@kedroncaravans.com` | kedroncaravans.com.au |
 | Bushtracker | `info@bushtracker.com` | bushtracker.com |
 | On The Move Caravans | `sales@caravanhq.com.au` | onthemovecaravans.com.au |
-
+| **Atlantic Caravans** | `info@atlanticcaravans.com.au` | atlanticcaravans.com.au |
+| **Malibu Caravans** | `info@malibucaravans.com.au` | malibucaravans.com.au |
+| **Australian Off Road (AOR)** | `sales@australianoffroad.com.au` | australianoffroad.com.au |
+| **Avan Campers** | `admin@avan.com.au` | avan.com.au |
+| **Avida RV** | `info@avidarv.com.au` | avidarv.com.au |
+| **Blue Sky Caravans** | `blueskycaravans@hotmail.com` | blueskycaravans.com.au |
+| **Bruder Expedition** | `sales@bruderx.com` | bruderx.com |
+| **Kokoda Caravans** | `enquiries@kokodacaravans.com.au` | kokodacaravans.com.au |
+| **Millard Caravans** | `info@millardrv.com.au` | millardrv.com.au |
+| **Pro Caravans** | `info@procaravans.com.au` | procaravans.com.au |
+| **Centaur Products** | `sales@bellmont.com.au` | centaurproducts.com.au |
 ### Suggested Outreach Subject Line
 `"Partner Invitation: Exclusive Leads for [Brand Name]"`
 

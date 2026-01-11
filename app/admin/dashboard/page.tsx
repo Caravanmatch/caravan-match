@@ -90,7 +90,7 @@ export default function AdminDashboardPage() {
 
     // 6. Main Render
     return (
-        <div className="min-h-screen bg-black text-white font-sans p-8 relative">
+        <div className="min-h-screen bg-black text-white font-sans pt-32 px-8 pb-8 relative">
             {/* Header */}
             <header className="flex justify-between items-center mb-6 border-b border-white/10 pb-6">
                 <div>
