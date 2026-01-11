@@ -607,7 +607,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                                 <br />
                                 We will email you at 5 months to check if it's sold.
                                 <br />
-                                If unsold, you can choose to extend or it will auto-expire.
+                                After 6 months, if unsold, it will automatically renew at <strong>$15/month</strong>.
                             </p>
                         </div>
 
