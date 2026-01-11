@@ -30,8 +30,8 @@ export default function DealerSidebar({ dealer }: { dealer: any }) {
                         key={item.path}
                         href={item.path}
                         className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${isActive(item.path)
-                                ? 'bg-primary text-white font-bold'
-                                : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                            ? 'bg-primary text-white font-bold'
+                            : 'text-zinc-400 hover:text-white hover:bg-white/5'
                             }`}
                     >
                         <span>{item.icon}</span>
@@ -39,8 +39,16 @@ export default function DealerSidebar({ dealer }: { dealer: any }) {
                     </Link>
                 ))}
 
-                <button className="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 text-zinc-600 cursor-not-allowed">
-                    <span>⚙️</span> Settings (Soon)
+                <button
+                    onClick={async () => {
+                        const res = await fetch('/api/stripe/portal', { method: 'POST' });
+                        const data = await res.json();
+                        if (data.url) window.location.href = data.url;
+                        else alert("No billing account found. Subscriptions are managed after your first payment/trial setup.");
+                    }}
+                    className="w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 text-zinc-400 hover:text-white hover:bg-white/5 transition"
+                >
+                    <span>⚙️</span> Manage Subscription
                 </button>
             </div>
 
