@@ -55,7 +55,7 @@ export async function POST(request: Request) {
             // Check for Promo Code (e.g. "NOTGREY" -> Free Listing)
             // Promo Code is already destructured above
 
-            if (promoCode && promoCode.toUpperCase() === 'NOTGREY') {
+            if (promoCode && (promoCode.toUpperCase() === 'NOTGREY' || promoCode.toUpperCase() === 'CAMP')) {
                 // BYPASS STRIPE: Activate Listing Immediately
                 await prisma.usedCaravan.update({
                     where: { id: listingId },

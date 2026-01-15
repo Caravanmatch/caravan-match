@@ -91,7 +91,7 @@ export default function TermsPage() {
                     <ul className="list-disc list-inside space-y-2 ml-4">
                         <li>Private sellers pay $70 for 3 months, then $15/month</li>
                         <li>Dealers with active subscriptions list for free</li>
-                        <li>Promo codes may apply (e.g., NOTGREY for free 3-month trial)</li>
+                        <li>Promo codes may apply (e.g., NOTGREY or CAMP for free 3-month trial)</li>
                     </ul>
 
                     <h3 className="text-xl font-semibold text-white mb-2 mt-4">6.3 Refund Policy</h3>
