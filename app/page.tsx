@@ -60,17 +60,53 @@ export default function Home() {
 
 
 
-      {/* Footer */}
-      <footer className="w-full py-8 text-center text-muted text-sm border-t border-white/5 bg-surface/50 backdrop-blur-sm flex flex-col gap-2">
-        <p>© 2025 Caravan Match. 100% Australian Owned and Operated. 🇦🇺</p>
-        <div className="flex justify-center gap-4">
-          <Link href="/legal/disclosure" className="hover:text-white transition underline">Legal Disclosure & Risk Warning</Link>
+      <footer className="w-full py-12 px-6 border-t border-white/5 bg-surface/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-left">
+          {/* Brand Column */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-heading font-bold text-white tracking-tight">
+              CARAVAN<span className="text-primary">MATCH</span>
+            </h3>
+            <p className="text-sm text-muted leading-relaxed">
+              The premium reverse marketplace for custom caravans in Australia. Design your dream van and let dealers compete for your business.
+            </p>
+            <p className="text-xs text-muted/60 leading-relaxed italic">
+              100% Australian Owned & Operated 🇦🇺
+            </p>
+          </div>
+
+          {/* Resources Column */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold uppercase tracking-widest text-white">Popular Resources</h4>
+            <ul className="space-y-2 text-sm text-muted">
+              <li><Link href="/guides/towing-weights" className="hover:text-primary transition">Towing Weight Guide ⚖️</Link></li>
+              <li><Link href="/resources/towing-calculator" className="hover:text-primary transition">Free Towing Calculator 🧮</Link></li>
+              <li><Link href="/guides" className="hover:text-primary transition">Expert Buying Guides 📖</Link></li>
+              <li><Link href="/used-caravans" className="hover:text-primary transition">Marketplace Inventory 🚐</Link></li>
+            </ul>
+          </div>
+
+          {/* Regional Column */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold uppercase tracking-widest text-white">Shop by Region</h4>
+            <ul className="space-y-2 text-sm text-muted">
+              <li><Link href="/buy-caravans-nsw" className="hover:text-primary transition">Caravans for Sale NSW 🏖️</Link></li>
+              <li><Link href="/buy-caravans-qld" className="hover:text-primary transition">Caravans for Sale QLD ☀️</Link></li>
+              <li><Link href="/used-caravans" className="hover:text-primary transition">Victoria Marketplace (Coming Soon)</Link></li>
+              <li><Link href="/used-caravans" className="hover:text-primary transition">West Australia Marketplace (Coming Soon)</Link></li>
+            </ul>
+          </div>
         </div>
-        <div className="flex justify-center gap-4 text-xs text-muted/60">
-          <Link href="/legal/terms" className="hover:text-white transition underline">Terms of Service</Link>
-          <Link href="/legal/privacy" className="hover:text-white transition underline">Privacy Policy</Link>
-          <Link href="/feedback" className="hover:text-white transition underline">Feedback</Link>
-          <Link href="/admin/login" className="hover:text-white transition underline opacity-20 hover:opacity-100">Admin</Link>
+
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-muted text-xs">
+          <p>© 2025 Caravan Match. All rights reserved.</p>
+          <div className="flex gap-4 flex-wrap justify-center">
+            <Link href="/legal/disclosure" className="hover:text-white transition underline">Legal Disclosure</Link>
+            <Link href="/legal/terms" className="hover:text-white transition underline">Terms</Link>
+            <Link href="/legal/privacy" className="hover:text-white transition underline">Privacy</Link>
+            <Link href="/feedback" className="hover:text-white transition underline">Feedback</Link>
+            <Link href="/admin/login" className="hover:text-white transition underline opacity-20">Admin</Link>
+          </div>
         </div>
       </footer>
     </div>
