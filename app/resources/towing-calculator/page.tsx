@@ -183,7 +183,7 @@ export default function TowingCalculatorPage() {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-white p-6 md:p-12">
+        <div className="min-h-screen bg-zinc-950 text-white p-6 md:p-12 pt-24 md:pt-32">
             <div className="max-w-6xl mx-auto">
                 <div className="mb-8 border-b border-white/10 pb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
