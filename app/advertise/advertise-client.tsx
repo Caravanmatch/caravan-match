@@ -348,315 +348,376 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
         <div className="min-h-screen bg-background text-foreground pt-32 pb-20 px-6">
             <div className="max-w-3xl mx-auto">
 
-                {/* Header */}
-                <div className="text-center mb-12 space-y-4">
-                    <h1 className="text-4xl font-heading font-bold">{dealer ? `Manage Inventory: ${dealer.company}` : 'Sell Your Caravan'}</h1>
-                    <p className="text-xl text-muted">{dealer ? 'Add new or used stock instantly.' : 'Estimated time: 3 minutes. Reach thousands of buyers.'}</p>
+                {/* Hero / SEO Section */}
+                <div className="text-center mb-16 space-y-6 animate-in fade-in slide-in-from-top-4">
+                    <div className="inline-block px-4 py-1.5 rounded-full border border-primary/20 bg-primary/10 text-primary text-sm font-bold mb-2 uppercase tracking-widest">
+                        Australia's #1 Dedicated Caravan Marketplace
+                    </div>
+                    <h1 className="text-5xl md:text-7xl font-heading font-bold leading-tight">
+                        Sell My <span className="text-primary">Caravan</span> Fast
+                    </h1>
+                    <p className="text-xl md:text-2xl text-muted max-w-2xl mx-auto leading-relaxed">
+                        Reach thousands of serious Aussie buyers today. List your caravan, camper, or motorhome in less than 3 minutes.
+                    </p>
+
+                    <div className="flex flex-wrap justify-center gap-8 pt-4">
+                        <div className="flex items-center gap-2">
+                            <span className="text-2xl">✅</span>
+                            <span className="text-sm font-bold text-white/70">No Commission</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-2xl">✅</span>
+                            <span className="text-sm font-bold text-white/70">Dealer Quotes Included</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-2xl">✅</span>
+                            <span className="text-sm font-bold text-white/70">Verified Buyers</span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Dealer Mode Banner */}
-                {dealer && (
-                    <div className="bg-purple-500/10 border border-purple-500/30 p-4 rounded-xl text-center mb-8">
-                        <span className="font-bold text-purple-400">⚡ Dealer Mode Enabled:</span> <span className="text-purple-200">Unlimited Free Listings active. No payment required.</span>
+                {/* Trust/Comparison Section for SEO */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+                    <div className="bg-surface/50 border border-white/5 p-8 rounded-3xl space-y-4">
+                        <h3 className="text-xl font-bold text-white">Why Caravan Match?</h3>
+                        <p className="text-muted text-sm leading-relaxed">
+                            Unlike Facebook Marketplace or Gumtree, Caravan Match is built specifically for the Australian caravan industry. We don't just list your van; we connect you with dealers looking for stock and private buyers who know the value of a quality build.
+                        </p>
+                        <ul className="space-y-2 text-sm text-zinc-400">
+                            <li className="flex items-center gap-2 font-medium"><span className="text-primary">✦</span> Professional AI descriptions</li>
+                            <li className="flex items-center gap-2 font-medium"><span className="text-primary">✦</span> Featured in regional search results</li>
+                            <li className="flex items-center gap-2 font-medium"><span className="text-primary">✦</span> Low flat-fee (No ongoing costs)</li>
+                        </ul>
                     </div>
-                )}
-
-                {/* Progress Bar */}
-                <div className="flex justify-between items-center mb-10 relative">
-                    <div className="absolute top-1/2 left-0 w-full h-1 bg-white/10 -z-10" />
-                    {[1, 2, 3].map((s) => (
-                        <div key={s} className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${step >= s ? 'bg-primary text-white' : 'bg-surface border border-white/20 text-muted'}`}>
-                            {s}
-                        </div>
-                    ))}
-                </div>
-
-                {/* Step 1: Specs */}
-                {step === 1 && (
-                    <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                        <h2 className="text-2xl font-bold border-b border-white/10 pb-4">1. Caravan Details</h2>
-
-                        <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
-
-                            {/* Condition (Available to all) */}
-                            <div className="space-y-2 col-span-2">
-                                <label className="text-sm font-medium text-muted">Condition</label>
-                                <div className="flex gap-4">
-                                    {['New', 'Used', 'Demo'].map(c => (
-                                        <label key={c} className={`flex-1 cursor-pointer border rounded-lg p-3 text-center transition ${formData.condition === c ? 'bg-primary text-white border-primary' : 'bg-background border-white/10 hover:border-white/30'}`}>
-                                            <input
-                                                type="radio"
-                                                name="condition"
-                                                value={c}
-                                                checked={formData.condition === c}
-                                                onChange={handleInputChange}
-                                                className="hidden"
-                                            />
-                                            <span className="font-bold">{c}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Category</label>
-                                <select name="category" value={formData.category} onChange={handleInputChange} className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary">
-                                    <option value="" className="bg-zinc-900 text-white">Select Category...</option>
-                                    {CARAVAN_CATEGORIES.map(cat => (
-                                        <option key={cat} value={cat} className="bg-zinc-900 text-white">{cat}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Year</label>
-                                <input name="year" value={formData.year} onChange={handleInputChange} type="number" placeholder="e.g. 2020" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Make</label>
-                                <select name="make" value={formData.make} onChange={handleInputChange} className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary">
-                                    <option value="" className="bg-zinc-900 text-white">Select Make...</option>
-                                    {CARAVAN_MAKES.map(make => (
-                                        <option key={make} value={make} className="bg-zinc-900 text-white">{make}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Custom Make Input (Only if 'Other' is selected) */}
-                            {formData.make === 'Other' && (
-                                <div className="space-y-2 mt-4">
-                                    <label className="text-sm font-medium text-zinc-400">Specify Make</label>
-                                    <input
-                                        name="customMake"
-                                        value={formData.customMake || ''}
-                                        onChange={handleInputChange}
-                                        type="text"
-                                        placeholder="e.g. Vintage Viscount"
-                                        className="w-full bg-black border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition"
-                                    />
-                                </div>
-                            )}
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Model</label>
-                                <input name="model" value={formData.model} onChange={handleInputChange} type="text" placeholder="e.g. Journey Outback" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Length (ft)</label>
-                                <input name="length" value={formData.length} onChange={handleInputChange} type="number" placeholder="20" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Sleeps</label>
-                                <select name="sleeps" value={formData.sleeps} onChange={handleInputChange} className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary">
-                                    <option value="2" className="bg-zinc-900 text-white">2</option>
-                                    <option value="3" className="bg-zinc-900 text-white">3</option>
-                                    <option value="4" className="bg-zinc-900 text-white">4</option>
-                                    <option value="5" className="bg-zinc-900 text-white">5</option>
-                                    <option value="6+" className="bg-zinc-900 text-white">6+</option>
-                                </select>
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Asking Price ($)</label>
-                                <input name="price" value={formData.price} onChange={handleInputChange} type="number" placeholder="65000" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
-                            </div>
-                        </div>
-
-                        <button onClick={handleNext} className="w-full py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition mt-4">
-                            Next: Photos & Description &rarr;
-                        </button>
-                    </div>
-                )}
-
-                {/* Step 2: Media */}
-                {step === 2 && (
-                    <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                        <h2 className="text-2xl font-bold border-b border-white/10 pb-4">2. Photos & Description</h2>
-
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <label className="text-sm font-medium">Description</label>
-                                <button
-                                    onClick={handleGenerateDescription}
-                                    disabled={isGenerating}
-                                    className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-full flex items-center gap-1 transition disabled:opacity-50"
-                                >
-                                    {isGenerating ? '✨ Magic Writing...' : '✨ Rewrite with AI'}
-                                </button>
-                            </div>
-                            <textarea
-                                name="description"
-                                value={formData.description}
-                                onChange={handleInputChange}
-                                rows={6}
-                                placeholder="Describe the condition, upgrades, and history of your van..."
-                                className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">YouTube/Video Link (Optional)</label>
-                            <input
-                                name="videoUrl"
-                                value={formData.videoUrl}
-                                onChange={handleInputChange}
-                                type="url"
-                                placeholder="https://youtu.be/..."
-                                className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
-                            />
-                            <p className="text-xs text-muted">Paste a link to a YouTube walkaround.</p>
-                        </div>
-
-                        <div className="space-y-4">
-                            <label className="text-sm font-medium">Photos (Max 20)</label>
-
-                            {/* Hidden File Input */}
-                            <input
-                                type="file"
-                                id="photo-upload"
-                                multiple
-                                accept="image/*"
-                                className="hidden"
-                                onChange={handlePhotoSelect}
-                            />
-
-                            {/* Upload Box */}
-                            <label
-                                htmlFor="photo-upload"
-                                className="block border-2 border-dashed border-white/10 rounded-xl p-10 text-center hover:border-primary/50 transition cursor-pointer bg-white/5"
+                    <div className="bg-primary/5 border border-primary/10 p-8 rounded-3xl space-y-4 flex flex-col justify-center text-center">
+                        <p className="text-4xl font-bold text-white">$89</p>
+                        <p className="text-primary font-bold uppercase tracking-widest text-xs">One-Time Fee until sold</p>
+                        <p className="text-muted text-xs">Reach 15,000+ monthly caravan enthusiasts</p>
+                        <div className="pt-4">
+                            <button
+                                onClick={() => {
+                                    const form = document.getElementById('listing-form');
+                                    form?.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className="bg-primary hover:bg-primary-hover text-white px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-primary/20"
                             >
-                                <p className="text-4xl mb-2">📷</p>
-                                <p className="font-bold">Click to upload photos</p>
-                                <p className="text-sm text-muted">JPG, PNG up to 10MB</p>
-                            </label>
-
-                            {/* Preview Grid */}
-                            {previewUrls.length > 0 && (
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                                    {previewUrls.map((url, index) => (
-                                        <div key={index} className="relative aspect-video bg-black/50 rounded-lg overflow-hidden group">
-                                            <img src={url} alt={`Preview ${index}`} className="w-full h-full object-cover" />
-                                            <button
-                                                onClick={() => removePhoto(index)}
-                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-lg"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="flex gap-4">
-                            <button onClick={() => setStep(1)} className="flex-1 py-4 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition">
-                                &larr; Back
-                            </button>
-                            <button onClick={handleNext} className="flex-1 py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition">
-                                Next: Contact Details &rarr;
+                                Get Started Now
                             </button>
                         </div>
                     </div>
-                )}
+                </div>
 
-                {/* Step 3: Contact */}
-                {step === 3 && (
-                    <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                        <h2 className="text-2xl font-bold border-b border-white/10 pb-4">3. Contact Details</h2>
-                        <p className="text-sm text-muted">Your phone number will be hidden by default unless you choose to show it.</p>
+                <div id="listing-form" className="max-w-3xl mx-auto scroll-mt-32">
+                    {/* Header */}
+                    <div className="text-center mb-12 space-y-4">
+                        <h2 className="text-3xl font-heading font-bold">{dealer ? `Manage Inventory: ${dealer.company}` : 'Step 1: Create Your Listing'}</h2>
+                        <p className="text-lg text-muted">{dealer ? 'Add new or used stock instantly.' : 'List your caravan for sale in under 3 minutes.'}</p>
+                    </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">First Name</label>
-                                <input name="firstName" value={formData.firstName} onChange={handleInputChange} type="text" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Last Name</label>
-                                <input name="lastName" value={formData.lastName} onChange={handleInputChange} type="text" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
-                            </div>
+                    {/* Dealer Mode Banner */}
+                    {dealer && (
+                        <div className="bg-purple-500/10 border border-purple-500/30 p-4 rounded-xl text-center mb-8">
+                            <span className="font-bold text-purple-400">⚡ Dealer Mode Enabled:</span> <span className="text-purple-200">Unlimited Free Listings active. No payment required.</span>
                         </div>
+                    )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Email</label>
-                                <input name="email" value={formData.email} onChange={handleInputChange} type="email" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                    {/* Progress Bar */}
+                    <div className="flex justify-between items-center mb-10 relative">
+                        <div className="absolute top-1/2 left-0 w-full h-1 bg-white/10 -z-10" />
+                        {[1, 2, 3].map((s) => (
+                            <div key={s} className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-colors ${step >= s ? 'bg-primary text-white' : 'bg-surface border border-white/20 text-muted'}`}>
+                                {s}
                             </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Phone</label>
-                                <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                        ))}
+                    </div>
+
+                    {/* Step 1: Specs */}
+                    {step === 1 && (
+                        <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                            <h2 className="text-2xl font-bold border-b border-white/10 pb-4">1. Caravan Details</h2>
+
+                            <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
+
+                                {/* Condition (Available to all) */}
+                                <div className="space-y-2 col-span-2">
+                                    <label className="text-sm font-medium text-muted">Condition</label>
+                                    <div className="flex gap-4">
+                                        {['New', 'Used', 'Demo'].map(c => (
+                                            <label key={c} className={`flex-1 cursor-pointer border rounded-lg p-3 text-center transition ${formData.condition === c ? 'bg-primary text-white border-primary' : 'bg-background border-white/10 hover:border-white/30'}`}>
+                                                <input
+                                                    type="radio"
+                                                    name="condition"
+                                                    value={c}
+                                                    checked={formData.condition === c}
+                                                    onChange={handleInputChange}
+                                                    className="hidden"
+                                                />
+                                                <span className="font-bold">{c}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Category</label>
+                                    <select name="category" value={formData.category} onChange={handleInputChange} className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary">
+                                        <option value="" className="bg-zinc-900 text-white">Select Category...</option>
+                                        {CARAVAN_CATEGORIES.map(cat => (
+                                            <option key={cat} value={cat} className="bg-zinc-900 text-white">{cat}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Year</label>
+                                    <input name="year" value={formData.year} onChange={handleInputChange} type="number" placeholder="e.g. 2020" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Make</label>
+                                    <select name="make" value={formData.make} onChange={handleInputChange} className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary">
+                                        <option value="" className="bg-zinc-900 text-white">Select Make...</option>
+                                        {CARAVAN_MAKES.map(make => (
+                                            <option key={make} value={make} className="bg-zinc-900 text-white">{make}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Custom Make Input (Only if 'Other' is selected) */}
+                                {formData.make === 'Other' && (
+                                    <div className="space-y-2 mt-4">
+                                        <label className="text-sm font-medium text-zinc-400">Specify Make</label>
+                                        <input
+                                            name="customMake"
+                                            value={formData.customMake || ''}
+                                            onChange={handleInputChange}
+                                            type="text"
+                                            placeholder="e.g. Vintage Viscount"
+                                            className="w-full bg-black border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition"
+                                        />
+                                    </div>
+                                )}
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Model</label>
+                                    <input name="model" value={formData.model} onChange={handleInputChange} type="text" placeholder="e.g. Journey Outback" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
                             </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Length (ft)</label>
+                                    <input name="length" value={formData.length} onChange={handleInputChange} type="number" placeholder="20" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Sleeps</label>
+                                    <select name="sleeps" value={formData.sleeps} onChange={handleInputChange} className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary">
+                                        <option value="2" className="bg-zinc-900 text-white">2</option>
+                                        <option value="3" className="bg-zinc-900 text-white">3</option>
+                                        <option value="4" className="bg-zinc-900 text-white">4</option>
+                                        <option value="5" className="bg-zinc-900 text-white">5</option>
+                                        <option value="6+" className="bg-zinc-900 text-white">6+</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Asking Price ($)</label>
+                                    <input name="price" value={formData.price} onChange={handleInputChange} type="number" placeholder="65000" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                            </div>
+
+                            <button onClick={handleNext} className="w-full py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition mt-4">
+                                Next: Photos & Description &rarr;
+                            </button>
                         </div>
+                    )}
 
-                        {/* Location: Suburb + State */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="space-y-2 md:col-span-2">
-                                <label className="text-sm font-medium">Suburb</label>
-                                <input
-                                    name="suburb"
-                                    value={formData.suburb}
+                    {/* Step 2: Media */}
+                    {step === 2 && (
+                        <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                            <h2 className="text-2xl font-bold border-b border-white/10 pb-4">2. Photos & Description</h2>
+
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <label className="text-sm font-medium">Description</label>
+                                    <button
+                                        onClick={handleGenerateDescription}
+                                        disabled={isGenerating}
+                                        className="text-xs bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded-full flex items-center gap-1 transition disabled:opacity-50"
+                                    >
+                                        {isGenerating ? '✨ Magic Writing...' : '✨ Rewrite with AI'}
+                                    </button>
+                                </div>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
                                     onChange={handleInputChange}
-                                    type="text"
-                                    placeholder="e.g. Richmond"
+                                    rows={6}
+                                    placeholder="Describe the condition, upgrades, and history of your van..."
                                     className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
                                 />
                             </div>
+
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">State</label>
-                                <select
-                                    name="state"
-                                    value={formData.state}
+                                <label className="text-sm font-medium">YouTube/Video Link (Optional)</label>
+                                <input
+                                    name="videoUrl"
+                                    value={formData.videoUrl}
                                     onChange={handleInputChange}
+                                    type="url"
+                                    placeholder="https://youtu.be/..."
                                     className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
+                                />
+                                <p className="text-xs text-muted">Paste a link to a YouTube walkaround.</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <label className="text-sm font-medium">Photos (Max 20)</label>
+
+                                {/* Hidden File Input */}
+                                <input
+                                    type="file"
+                                    id="photo-upload"
+                                    multiple
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handlePhotoSelect}
+                                />
+
+                                {/* Upload Box */}
+                                <label
+                                    htmlFor="photo-upload"
+                                    className="block border-2 border-dashed border-white/10 rounded-xl p-10 text-center hover:border-primary/50 transition cursor-pointer bg-white/5"
                                 >
-                                    <option value="" className="bg-zinc-900 text-white">Select State...</option>
-                                    {STATES.map(s => (
-                                        <option key={s} value={s} className="bg-zinc-900 text-white">{s}</option>
-                                    ))}
-                                </select>
+                                    <p className="text-4xl mb-2">📷</p>
+                                    <p className="font-bold">Click to upload photos</p>
+                                    <p className="text-sm text-muted">JPG, PNG up to 10MB</p>
+                                </label>
+
+                                {/* Preview Grid */}
+                                {previewUrls.length > 0 && (
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                                        {previewUrls.map((url, index) => (
+                                            <div key={index} className="relative aspect-video bg-black/50 rounded-lg overflow-hidden group">
+                                                <img src={url} alt={`Preview ${index}`} className="w-full h-full object-cover" />
+                                                <button
+                                                    onClick={() => removePhoto(index)}
+                                                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-lg"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex gap-4">
+                                <button onClick={() => setStep(1)} className="flex-1 py-4 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition">
+                                    &larr; Back
+                                </button>
+                                <button onClick={handleNext} className="flex-1 py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition">
+                                    Next: Contact Details &rarr;
+                                </button>
                             </div>
                         </div>
+                    )}
 
-                        {/* Promo Code */}
-                        <div className="space-y-2 mt-4">
-                            <label className="text-sm font-medium text-purple-400">Have a Promo Code?</label>
-                            <input
-                                name="promoCode"
-                                value={formData.promoCode || ''}
-                                onChange={handleInputChange}
-                                type="text"
-                                placeholder="Enter code (Optional)"
-                                className="w-full bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 outline-none focus:border-purple-500 uppercase tracking-widest font-mono"
-                            />
-                        </div>
+                    {/* Step 3: Contact */}
+                    {step === 3 && (
+                        <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                            <h2 className="text-2xl font-bold border-b border-white/10 pb-4">3. Contact Details</h2>
+                            <p className="text-sm text-muted">Your phone number will be hidden by default unless you choose to show it.</p>
 
-                        <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-xl text-center mt-6">
-                            <p className="font-bold text-yellow-400 mb-1">Listing Terms</p>
-                            <p className="text-yellow-200/80 text-sm">
-                                Your ad remains live for <strong>6 Months</strong>.
-                                <br />
-                                We will email you at 5 months to check if it's sold.
-                                <br />
-                                After 6 months, if unsold, it will automatically renew at <strong>$15/month</strong>.
-                            </p>
-                        </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">First Name</label>
+                                    <input name="firstName" value={formData.firstName} onChange={handleInputChange} type="text" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Last Name</label>
+                                    <input name="lastName" value={formData.lastName} onChange={handleInputChange} type="text" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                            </div>
 
-                        <div className="flex gap-4 pt-4">
-                            <button onClick={() => setStep(2)} className="flex-1 py-4 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition">
-                                &larr; Back
-                            </button>
-                            <button
-                                onClick={handleSubmit}
-                                disabled={loading}
-                                className={`flex-1 py-4 font-bold rounded-xl transition flex items-center justify-center gap-2 ${loading ? 'bg-zinc-700' : 'bg-primary hover:bg-primary-hover text-white'}`}
-                            >
-                                {loading ? 'Uploading Photos & Publishing...' : (dealer ? 'Publish Listing (Free) 🚀' : 'Pay $89 (6 Months) 🚀')}
-                            </button>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Email</label>
+                                    <input name="email" value={formData.email} onChange={handleInputChange} type="email" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Phone</label>
+                                    <input name="phone" value={formData.phone} onChange={handleInputChange} type="tel" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
+                                </div>
+                            </div>
+
+                            {/* Location: Suburb + State */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="space-y-2 md:col-span-2">
+                                    <label className="text-sm font-medium">Suburb</label>
+                                    <input
+                                        name="suburb"
+                                        value={formData.suburb}
+                                        onChange={handleInputChange}
+                                        type="text"
+                                        placeholder="e.g. Richmond"
+                                        className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">State</label>
+                                    <select
+                                        name="state"
+                                        value={formData.state}
+                                        onChange={handleInputChange}
+                                        className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary"
+                                    >
+                                        <option value="" className="bg-zinc-900 text-white">Select State...</option>
+                                        {STATES.map(s => (
+                                            <option key={s} value={s} className="bg-zinc-900 text-white">{s}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Promo Code */}
+                            <div className="space-y-2 mt-4">
+                                <label className="text-sm font-medium text-purple-400">Have a Promo Code?</label>
+                                <input
+                                    name="promoCode"
+                                    value={formData.promoCode || ''}
+                                    onChange={handleInputChange}
+                                    type="text"
+                                    placeholder="Enter code (Optional)"
+                                    className="w-full bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 outline-none focus:border-purple-500 uppercase tracking-widest font-mono"
+                                />
+                            </div>
+
+                            <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-xl text-center mt-6">
+                                <p className="font-bold text-yellow-400 mb-1">Listing Terms</p>
+                                <p className="text-yellow-200/80 text-sm">
+                                    Your ad remains live for <strong>6 Months</strong>.
+                                    <br />
+                                    We will email you at 5 months to check if it's sold.
+                                    <br />
+                                    After 6 months, if unsold, it will automatically renew at <strong>$15/month</strong>.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-4 pt-4">
+                                <button onClick={() => setStep(2)} className="flex-1 py-4 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition">
+                                    &larr; Back
+                                </button>
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={loading}
+                                    className={`flex-1 py-4 font-bold rounded-xl transition flex items-center justify-center gap-2 ${loading ? 'bg-zinc-700' : 'bg-primary hover:bg-primary-hover text-white'}`}
+                                >
+                                    {loading ? 'Uploading Photos & Publishing...' : (dealer ? 'Publish Listing (Free) 🚀' : 'Pay $89 (6 Months) 🚀')}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

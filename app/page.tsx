@@ -61,7 +61,7 @@ export default function Home() {
 
 
       <footer className="w-full py-12 px-6 border-t border-white/5 bg-surface/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-left">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 text-left">
           {/* Brand Column */}
           <div className="space-y-4">
             <h3 className="text-xl font-heading font-bold text-white tracking-tight">
@@ -81,20 +81,8 @@ export default function Home() {
             <ul className="space-y-2 text-sm text-muted">
               <li><Link href="/guides/towing-weights" className="hover:text-primary transition">Towing Weight Guide ⚖️</Link></li>
               <li><Link href="/resources/towing-calculator" className="hover:text-primary transition">Free Towing Calculator 🧮</Link></li>
-              <li><Link href="/guides" className="hover:text-primary transition">Expert Buying Guides 📖</Link></li>
               <li><Link href="/used-caravans" className="hover:text-primary transition">Caravan Sales Australia 🚐</Link></li>
               <li><Link href="/advertise" className="hover:text-primary transition">Sell My Caravan Fast 💰</Link></li>
-            </ul>
-          </div>
-
-          {/* Regional Column */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold uppercase tracking-widest text-white">Shop by Region</h4>
-            <ul className="space-y-2 text-sm text-muted">
-              <li><Link href="/buy-caravans-nsw" className="hover:text-primary transition">Caravans for Sale NSW 🏖️</Link></li>
-              <li><Link href="/buy-caravans-qld" className="hover:text-primary transition">Caravans for Sale QLD ☀️</Link></li>
-              <li><Link href="/used-caravans" className="hover:text-primary transition">Victoria Marketplace (Coming Soon)</Link></li>
-              <li><Link href="/used-caravans" className="hover:text-primary transition">West Australia Marketplace (Coming Soon)</Link></li>
             </ul>
           </div>
         </div>

@@ -49,8 +49,7 @@ export default function Navbar() {
                 <div className="hidden md:flex flex-wrap justify-center gap-6 text-sm font-medium text-muted items-center">
                     <Link href="/builder" className="hover:text-white transition">Builder</Link>
                     <Link href="/used-caravans" className="hover:text-white transition">Marketplace</Link>
-                    <Link href="/guides" className="hover:text-white transition">Guides</Link>
-                    <Link href="/resources/towing-calculator" className="hover:text-white transition">Weights</Link>
+                    <Link href="/resources/towing-calculator" className="hover:text-white transition">Towing Weights</Link>
                     <Link href="/advertise" className="text-primary hover:text-primary-hover font-bold transition">Sell Your Van</Link>
                     <Link href="/dealer/subscription" className="hover:text-foreground transition whitespace-nowrap">Dealer Plans</Link>
                     <ProfileButton />
@@ -70,8 +69,7 @@ export default function Navbar() {
                 <div className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl md:hidden flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-200">
                     <Link href="/builder" className="text-2xl font-bold text-white" onClick={() => setIsMobileMenuOpen(false)}>Builder</Link>
                     <Link href="/used-caravans" className="text-2xl font-bold text-white" onClick={() => setIsMobileMenuOpen(false)}>Marketplace</Link>
-                    <Link href="/guides" className="text-2xl font-bold text-white" onClick={() => setIsMobileMenuOpen(false)}>Guides</Link>
-                    <Link href="/resources/towing-calculator" className="text-2xl font-bold text-white" onClick={() => setIsMobileMenuOpen(false)}>Weights</Link>
+                    <Link href="/resources/towing-calculator" className="text-2xl font-bold text-white" onClick={() => setIsMobileMenuOpen(false)}>Towing Weights</Link>
                     <Link href="/advertise" className="text-2xl font-bold text-primary" onClick={() => setIsMobileMenuOpen(false)}>Sell Your Van</Link>
                     <Link href="/dealer/subscription" className="text-xl font-medium text-muted" onClick={() => setIsMobileMenuOpen(false)}>Dealer Plans</Link>
 

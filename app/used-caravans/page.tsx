@@ -159,9 +159,10 @@ export default function UsedCaravansPage() {
             <div className="bg-surface border-b border-white/10 pt-6 pb-10 px-6">
 
                 <div className="max-w-7xl mx-auto space-y-6">
-                    <h1 className="text-4xl font-heading font-bold">
-                        Find Your Perfect <span className="text-primary">Caravan</span>
+                    <h1 className="text-4xl md:text-5xl font-heading font-bold">
+                        Caravan Sales <span className="text-primary">Australia</span>
                     </h1>
+                    <p className="text-muted max-w-2xl">Browse the best used caravans for sale from across Australia. Filter by make, year, location, and features to find your next adventure.</p>
 
                     {/* Search Controls */}
                     <div className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col gap-6 shadow-xl">
@@ -546,6 +547,28 @@ export default function UsedCaravansPage() {
                         })}
                     </div>
                 )}
+            </div>
+
+            {/* SEO Authority Section */}
+            <div className="max-w-7xl mx-auto px-6 py-20 border-t border-white/5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                    <div className="space-y-6">
+                        <h2 className="text-3xl font-bold text-white">The Trusted Marketplace for Caravan Sales</h2>
+                        <p className="text-muted leading-relaxed">
+                            Finding the right caravan for sale in Australia can be overwhelming. Caravan Match simplifies the process by bringing together premium used stock from private sellers and trusted dealers into one reverse marketplace.
+                        </p>
+                        <p className="text-muted leading-relaxed">
+                            Whether you're looking for a rugged <strong>off-road caravan</strong> for the Gibb River Road, a luxury <strong>family bunk van</strong> for coastal trips, or a compact <strong>hybrid camper</strong>, our marketplace is updated daily with the latest listings.
+                        </p>
+                    </div>
+                    <div className="space-y-6">
+                        <div className="pt-0">
+                            <h3 className="text-xl font-bold text-white mb-4">Market Insights</h3>
+                            <Link href="/guides/towing-weights" className="block text-sm text-muted hover:text-primary transition mb-2">✦ Understanding Towing Weights & GVM</Link>
+                            <Link href="/resources/towing-calculator" className="block text-sm text-muted hover:text-primary transition">✦ FREE Caravan Towing Calculator</Link>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -185,16 +185,22 @@ export default function TowingCalculatorPage() {
     return (
         <div className="min-h-screen bg-zinc-950 text-white p-6 md:p-12 pt-24 md:pt-32">
             <div className="max-w-6xl mx-auto">
-                <div className="mb-8 border-b border-white/10 pb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="mb-8 border-b border-white/10 pb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
                         <h1 className="text-3xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-amber-500">
                             Know Your Weights ⚖️
                         </h1>
                         <p className="text-muted mt-2">Ensure your vehicle and caravan setup is legal and safe.</p>
                     </div>
-                    <Link href="/" className="text-sm text-zinc-400 hover:text-white transition">
-                        ← Back Home
-                    </Link>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                        <Link href="/guides/towing-weights" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition group">
+                            <span>📖 Read Towing 101 Guide</span>
+                            <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </Link>
+                        <Link href="/" className="inline-flex items-center justify-center px-6 py-3 bg-white/5 border border-white/10 text-sm text-zinc-400 hover:text-white hover:bg-white/10 rounded-xl transition">
+                            ← Back Home
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="grid lg:grid-cols-3 gap-8">
