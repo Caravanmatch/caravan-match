@@ -82,7 +82,8 @@ export default function Home() {
               <li><Link href="/guides/towing-weights" className="hover:text-primary transition">Towing Weight Guide ⚖️</Link></li>
               <li><Link href="/resources/towing-calculator" className="hover:text-primary transition">Free Towing Calculator 🧮</Link></li>
               <li><Link href="/guides" className="hover:text-primary transition">Expert Buying Guides 📖</Link></li>
-              <li><Link href="/used-caravans" className="hover:text-primary transition">Marketplace Inventory 🚐</Link></li>
+              <li><Link href="/used-caravans" className="hover:text-primary transition">Caravan Sales Australia 🚐</Link></li>
+              <li><Link href="/advertise" className="hover:text-primary transition">Sell My Caravan Fast 💰</Link></li>
             </ul>
           </div>
 

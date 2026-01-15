@@ -18,12 +18,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://caravanmatch.com.au"),
-  title: "Caravan Match | Buy & Sell Custom Caravans Australia",
-  description: "The premium reverse marketplace for custom caravans in Australia. Submit a tender to get competing quotes from top manufacturers, or browse used caravans for sale.",
-  keywords: ["caravan", "camping", "custom caravan", "caravan builds", "buy caravan australia", "sell caravan australia", "caravan tenders", "caravan marketplace"],
+  title: "Caravan Match | Caravan Sales & Sell My Caravan Australia",
+  description: "The premium reverse marketplace for caravan sales in Australia. Submit a tender to get competing quotes for custom builds, or sell my caravan today on our marketplace.",
+  keywords: ["caravan sales", "sell my caravan", "caravan sales australia", "custom caravan", "caravan builds", "buy caravan australia", "sell caravan australia", "caravan tenders", "caravan marketplace"],
   openGraph: {
-    title: "Caravan Match | Buy & Sell Custom Caravans Australia",
-    description: "The premium reverse marketplace for custom caravans in Australia. Submit a tender to get quotes or browse second-hand listings.",
+    title: "Caravan Match | Caravan Sales & Sell My Caravan Australia",
+    description: "The premium reverse marketplace for caravan sales in Australia. Submit a tender to get quotes or browse second-hand listings.",
     url: "https://caravanmatch.com.au",
     siteName: "Caravan Match",
     locale: "en_AU",
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Caravan Match | Buy & Sell Custom Caravans Australia",
-    description: "The premium reverse marketplace for custom caravans in Australia.",
+    title: "Caravan Match | Caravan Sales & Sell My Caravan Australia",
+    description: "The premium reverse marketplace for caravan sales in Australia.",
   },
   verification: {
     google: "RnlAWm2eDmclQd7srZg6V61D0v9Wy5F8P-RQjRBMI84",
