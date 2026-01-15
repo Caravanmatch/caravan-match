@@ -8,15 +8,13 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Watermark Flag */}
-      <div className="fixed bottom-[-60px] left-[-20px] z-0 opacity-30 pointer-events-none select-none grayscale-0 contrast-125 animate-in fade-in duration-1000">
-        <span className="text-[250px] leading-none">🇦🇺</span>
-      </div>
+
 
       {/* Navbar - MOVED TO LAYOUT */}
 
       {/* Hero Section */}
-      <main className="flex-1 flex flex-col justify-center items-center text-center px-4 mt-48 md:mt-24 z-10 w-full max-w-7xl mx-auto">
-        <div className="max-w-5xl space-y-8 py-20">
+      <main className="flex-1 flex flex-col justify-center items-center text-center px-4 mt-32 md:mt-32 z-10 w-full max-w-7xl mx-auto">
+        <div className="max-w-5xl space-y-6 py-10">
 
           <div className="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-sm font-medium text-primary-300 mb-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
             ✨ Australia's #1 Custom Caravan Platform
@@ -30,8 +28,9 @@ export default function Home() {
             TOW IT.
           </h1>
 
+
           <div className="flex flex-col md:flex-row gap-6 justify-center items-center pt-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-            <Link href="/builder" className="group relative px-8 py-4 bg-primary text-white text-lg font-bold rounded-xl hover:bg-primary-hover transition shadow-[0_0_30px_rgba(234,179,8,0.3)] transform hover:scale-105 duration-200">
+            <Link href="/builder" className="group relative px-8 py-4 bg-primary text-white text-lg font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition shadow-[0_0_30px_rgba(234,179,8,0.3)] transform hover:scale-105 duration-200">
               Start Your Build
             </Link>
           </div>

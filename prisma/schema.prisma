@@ -59,6 +59,7 @@ model Tender {
   
   // Budget / Timeline
   targetDate       String?
+  expiresAt        DateTime?
   
   // Relations
   clientId         String?
@@ -196,4 +197,28 @@ model LoginAttempt {
   attempts  Int      @default(0)
   lockedUntil DateTime?
   updatedAt DateTime @updatedAt
+}
+
+model AmbassadorApplication {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  name           String
+  email          String
+  phone          String?
+  tiktok         String?
+  youtube        String?
+  instagram      String?
+  otherChannels  String?
+  followers      String?
+  pitch          String
+  
+  status         String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewNotes    String?
+  approvedAt     DateTime?
+  
+  // If approved, track their activity
+  isActive       Boolean  @default(true)
+  lastContentDate DateTime?
 }

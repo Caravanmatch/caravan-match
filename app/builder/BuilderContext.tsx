@@ -28,6 +28,14 @@ export interface BuildState {
     outdoor_kitchen?: string[];
     electric_awning?: string;
     auto_level?: string;
+    // New Layout Keys
+    layout_bed_orientation?: string;
+    layout_bathroom?: string;
+    layout_kitchen?: string;
+    layout_dinette?: string;
+    layout_bunks_placement?: string;
+    layout_door_position?: string;
+
     custom_notes: Record<string, string>; // Key: fieldId, Value: User Note
     selectedDealerIds?: string[];
 }
@@ -35,6 +43,7 @@ export interface BuildState {
 interface BuilderContextType {
     build: BuildState;
     updateBuild: (key: keyof BuildState, value: any) => void;
+    updateMultiple: (updates: Partial<BuildState>) => void;
     resetBuild: () => void;
     currentStep: number;
     setStep: (step: number) => void;
@@ -82,6 +91,10 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
         setBuild((prev) => ({ ...prev, [key]: value }));
     };
 
+    const updateMultiple = (updates: Partial<BuildState>) => {
+        setBuild((prev) => ({ ...prev, ...updates }));
+    };
+
     const resetBuild = () => {
         const emptyState: BuildState = {
             appliances: [],
@@ -98,7 +111,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
     const setStep = (step: number) => setCurrentStep(step);
 
     return (
-        <BuilderContext.Provider value={{ build, updateBuild, resetBuild, currentStep, setStep, nextStep, prevStep }}>
+        <BuilderContext.Provider value={{ build, updateBuild, updateMultiple, resetBuild, currentStep, setStep, nextStep, prevStep }}>
             {children}
         </BuilderContext.Provider>
     );

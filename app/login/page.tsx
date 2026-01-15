@@ -121,7 +121,7 @@ function LoginForm() {
                         </div>
                     </div>
 
-                    <button className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition mt-4">
+                    <button className="w-full py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover shadow-lg shadow-primary/20 transition mt-4">
                         Login
                     </button>
                 </form>

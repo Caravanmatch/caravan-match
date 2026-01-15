@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
     try {
-        const { tier, marketIntel, listingId } = await request.json();
+        const { tier, marketIntel, listingId, promoCode } = await request.json();
         const cookieStore = await cookies();
 
         // --- 1. HANDLE DEALER SUBSCRIPTION ---
@@ -52,10 +52,22 @@ export async function POST(request: Request) {
         // --- 2. HANDLE PRIVATE LISTING FEE ($70) ---
         // --- 2. HANDLE PRIVATE LISTING FEE ($89 + Auto-Renew) ---
         if (listingId) {
-            // Fetch listing to verify / get email
-            // Simplified: just passing ID. Ideally verify ownership.
+            // Check for Promo Code (e.g. "NOTGREY" -> Free Listing)
+            // Promo Code is already destructured above
 
-            // HYBRID MODEL: $89 Upfront, then $15/mo after 6 months
+            if (promoCode && promoCode.toUpperCase() === 'NOTGREY') {
+                // BYPASS STRIPE: Activate Listing Immediately
+                await prisma.usedCaravan.update({
+                    where: { id: listingId },
+                    data: { status: 'APPROVED' }
+                });
+
+                return NextResponse.json({
+                    url: `${request.headers.get('origin')}/client/dashboard?listing_success=true`
+                });
+            }
+
+            // Normal Flow: Stripe Checkout
             const session = await stripe.checkout.sessions.create({
                 line_items: [
                     // A. The One-Time Fee ($89) - Charged IMMEDIATELY
@@ -86,7 +98,8 @@ export async function POST(request: Request) {
                 metadata: {
                     listingId: listingId,
                     type: 'PRIVATE_LISTING'
-                }
+                },
+                allow_promotion_codes: true
             });
 
             return NextResponse.json({ url: session.url });

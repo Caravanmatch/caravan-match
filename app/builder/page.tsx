@@ -133,7 +133,7 @@ function OptionCard({
 }
 
 function BuilderWizard() {
-    const { currentStep, nextStep, prevStep, build, updateBuild } = useBuilder();
+    const { currentStep, nextStep, prevStep, build, updateBuild, updateMultiple } = useBuilder();
     const [showInfoModal, setShowInfoModal] = useState(false);
     const stepData = STEPS[currentStep];
 
@@ -149,7 +149,26 @@ function BuilderWizard() {
                 updateBuild(key as any, [...current, value]);
             }
         } else {
-            updateBuild(key as any, value);
+            // --- CONFLICT LOGIC FOR REAR LAYOUTS ---
+            // IDs that occupy the Rear Wall:
+            // layout_bathroom: 'full_ensuite'
+            // layout_dinette: 'club'
+            // layout_bunks_placement: 'rear_wall'
+
+            const updates: any = { [key]: value };
+
+            if (key === 'layout_bathroom' && value === 'full_ensuite') {
+                updates['layout_dinette'] = '';
+                updates['layout_bunks_placement'] = '';
+            } else if (key === 'layout_dinette' && value === 'club') {
+                updates['layout_bathroom'] = '';
+                updates['layout_bunks_placement'] = '';
+            } else if (key === 'layout_bunks_placement' && value === 'rear_wall') {
+                updates['layout_bathroom'] = '';
+                updates['layout_dinette'] = '';
+            }
+
+            updateMultiple(updates);
         }
     };
 
@@ -323,7 +342,7 @@ function BuilderWizard() {
                                         <p className="text-muted mb-8">It takes about 3 minutes to complete your build profile.</p>
                                         <button
                                             onClick={nextStep}
-                                            className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition transform hover:scale-105"
+                                            className="w-full py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover shadow-lg shadow-primary/20 transition transform hover:scale-105"
                                         >
                                             Start Configuration
                                         </button>
@@ -418,7 +437,7 @@ function BuilderWizard() {
                                 nextStep();
                             }
                         }}
-                        className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition transform hover:translate-y-[-2px]"
+                        className="px-8 py-3 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover shadow-lg shadow-primary/20 transition transform hover:translate-y-[-2px]"
                     >
                         {isLastStep ? 'Review & Submit' : 'Continue'}
                     </button>

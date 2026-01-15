@@ -68,6 +68,17 @@ export default function UsedCaravansPage() {
             });
     }, []);
 
+    // Dynamic Filter Options
+    const [availableMakes, setAvailableMakes] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (listings.length > 0) {
+            // Extract unique makes from actual listings
+            const makes = Array.from(new Set(listings.map(l => l.make))).sort();
+            setAvailableMakes(makes);
+        }
+    }, [listings]);
+
     // Effect to run filtering whenever state changes
     useEffect(() => {
         let result = listings;
@@ -217,7 +228,7 @@ export default function UsedCaravansPage() {
                                 className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 outline-none text-white appearance-none cursor-pointer hover:bg-white/5 transition text-sm font-medium"
                             >
                                 <option className="bg-zinc-900 text-white">Any Make</option>
-                                {CARAVAN_MAKES.map(make => (
+                                {availableMakes.map(make => (
                                     <option key={make} value={make} className="bg-zinc-900 text-white">{make}</option>
                                 ))}
                             </select>
@@ -350,7 +361,7 @@ export default function UsedCaravansPage() {
                                         className="w-full bg-surface border border-white/10 rounded-xl px-4 py-3 text-white appearance-none"
                                     >
                                         <option className="bg-zinc-900 text-white">Any Make</option>
-                                        {CARAVAN_MAKES.map(m => <option key={m} value={m} className="bg-zinc-900 text-white">{m}</option>)}
+                                        {availableMakes.map(m => <option key={m} value={m} className="bg-zinc-900 text-white">{m}</option>)}
                                     </select>
                                     <select
                                         value={selectedState}
@@ -484,7 +495,7 @@ export default function UsedCaravansPage() {
                                     {/* Image Placeholder */}
                                     <div className="h-56 bg-zinc-800 relative overflow-hidden">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={van.images?.split(',')[0]} alt={van.model} className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100" />
+                                        <img src={van.images?.split(',')[0]} alt={van.model} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100" />
 
                                         <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] uppercase font-bold px-2 py-1 rounded border border-white/10">
                                             {van.condition || van.status}

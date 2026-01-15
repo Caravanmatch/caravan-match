@@ -131,6 +131,7 @@ export async function POST(request: Request) {
                 custom_notes: JSON.stringify(body.custom_notes || {}),
 
                 status: 'OPEN',
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 Days from now
             },
         });
 

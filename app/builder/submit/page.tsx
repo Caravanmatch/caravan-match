@@ -12,6 +12,7 @@ export default function SubmitPage() {
     const [submitting, setSubmitting] = useState(false);
     const [loadingAuth, setLoadingAuth] = useState(true);
     const [user, setUser] = useState<any>(null);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -137,9 +138,13 @@ export default function SubmitPage() {
             });
 
             if (res.ok) {
-                alert(overrideSessionId ? "Payment Verified! Tender Launched. 🚀" : "Tender Submitted Successfully!");
-                resetBuild(); // CLEAR STATE
-                router.push(user ? '/client/dashboard' : '/');
+                // alert(overrideSessionId ? "Payment Verified! Tender Launched. 🚀" : "Tender Submitted Successfully!");
+                setIsSubmitted(true);
+                // We keep resetBuild() for LATER or not at all until they leave the success page?
+                // Actually resetBuild() clears context. If they are on success page, it's fine.
+                resetBuild();
+                // We don't redirect anymore, let them see the success view.
+                // router.push(user ? '/client/dashboard' : '/');
             } else if (res.status === 402) {
                 // Payment Required
                 const confirmPay = window.confirm("You have reached your limit of 3 Free Tenders.\n\nWould you like to pay $4.99 AUD to launch this tender?");
@@ -228,6 +233,40 @@ export default function SubmitPage() {
         const opt = options.find((o: any) => o.id === valueId);
         return opt ? opt.label : valueId;
     };
+
+    if (isSubmitted) {
+        return (
+            <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-6">
+                <div className="max-w-2xl w-full text-center animate-in fade-in zoom-in duration-500">
+                    <div className="mb-8">
+                        <div className="w-24 h-24 bg-primary/20 rounded-full flex items-center justify-center text-5xl mx-auto border-2 border-primary animate-bounce">
+                            🚀
+                        </div>
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">Tender Launched!</h1>
+                    <p className="text-xl text-muted mb-12">
+                        Your dream build specifications have been sent to our verified dealer network.
+                    </p>
+
+                    <div className="grid gap-6">
+                        <Link
+                            href={user ? "/client/dashboard" : "/"}
+                            className="w-full py-4 bg-primary text-white text-center font-bold rounded-xl border-2 border-white hover:bg-primary-hover shadow-xl shadow-primary/20 transition flex items-center justify-center gap-2 text-lg"
+                        >
+                            <span>Go to My Dashboard</span>
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </Link>
+
+                        <div className="bg-surface/50 border border-white/5 rounded-2xl p-6 text-sm text-zinc-400">
+                            <strong>What's next?</strong> Dealers will review your requirements and submit quotes. You'll be notified via email whenever a new quote arrives. Use your dashboard to compare and accept.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background text-foreground p-6 md:p-12">
@@ -484,7 +523,7 @@ export default function SubmitPage() {
                     <button
                         onClick={() => handleSubmit()}
                         disabled={submitting}
-                        className="px-8 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-xl shadow-primary/20 transition flex items-center gap-2"
+                        className="px-8 py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover shadow-xl shadow-primary/20 transition flex items-center gap-2"
                     >
                         {submitting ? (
                             'Launching Tender...'

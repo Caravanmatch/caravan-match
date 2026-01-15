@@ -30,20 +30,26 @@ const ProgressBar = ({ pct, label, val, max }: any) => {
     );
 };
 
-const InputRow = ({ label, val, set, field }: any) => (
-    <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-lg border border-white/5">
-        <label className="text-sm text-zinc-400 font-medium">{label}</label>
-        <div className="flex items-center gap-2">
-            <input
-                type="number"
-                className="w-20 bg-zinc-900 border border-white/10 rounded p-1 text-right text-white font-bold focus:border-primary focus:outline-none"
-                value={val[field]}
-                onChange={(e) => set({ ...val, [field]: parseFloat(e.target.value) || 0 })}
-            />
-            <span className="text-xs text-zinc-600 font-bold w-4">{field === 'fuel' || field === 'water' ? 'L' : 'kg'}</span>
+const InputRow = ({ label, val, set, field }: any) => {
+    let unit = 'kg';
+    if (field === 'fuel' || field === 'water') unit = 'L';
+    if (field === 'wheelbase' || field === 'overhang') unit = 'mm';
+
+    return (
+        <div className="flex items-center justify-between gap-4 p-3 bg-white/5 rounded-lg border border-white/5">
+            <label className="text-sm text-zinc-400 font-medium">{label}</label>
+            <div className="flex items-center gap-2">
+                <input
+                    type="number"
+                    className="w-20 bg-zinc-900 border border-white/10 rounded p-1 text-right text-white font-bold focus:border-primary focus:outline-none"
+                    value={val[field]}
+                    onChange={(e) => set({ ...val, [field]: parseFloat(e.target.value) || 0 })}
+                />
+                <span className="text-xs text-zinc-600 font-bold w-8">{unit}</span>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 export default function TowingCalculatorPage() {
     // --- STATE ---
@@ -54,72 +60,83 @@ export default function TowingCalculatorPage() {
         gvm: 3350,  // Max Weight
         gcm: 6850,  // Max Combined
         maxTow: 3500, // Max Towing
-        maxBall: 350
+        maxBall: 350,
+        maxRearAxle: 1850, // Max Rear Axle Rating
+        rearAxleTare: 1150, // Weight on rear axle when empty
+        wheelbase: 3000,    // distance between axles (mm)
+        overhang: 1250      // distance from rear axle to ball (mm)
     });
 
     // Vehicle Payload
-    const [carPayload, setCarPayload] = useState({
-        passengers: 150, // 2 adults approx
-        fuel: 0, // Litres (approx kg)
-        bullbar: 0,
-        roofRack: 0,
-        luggage: 0,
-        tools: 0
+    const [carPayload] = useState({
+        passengers: 150,
+        fuel: 0,
+        bullbar: 50,
+        roofRack: 30,
+        luggage: 100,
+        tools: 40
+    });
+
+    // We need to keep carPayload setting working if needed, but the current code has setCarPayload unused in some parts or defined.
+    // Let's stick to the user's pattern but FIX the setCarPayload if I broke it in my head.
+    // The previous code had const [carPayload, setCarPayload] = useState...
+    const [carPayloadState, setCarPayload] = useState({
+        passengers: 150,
+        fuel: 80,
+        bullbar: 60,
+        roofRack: 30,
+        luggage: 100,
+        tools: 40
     });
 
     // Caravan Specs
     const [caravan, setCaravan] = useState({
         tare: 2500,
-        atm: 3000,
-        tbm: 250 // Tow Ball Mass
+        atm: 3200,
+        tbm: 280
     });
 
     // Caravan Payload
     const [vanPayload, setVanPayload] = useState({
-        water: 0, // Litres
-        gas: 0, // kg
-        luggage: 0,
-        food: 0
+        water: 180,
+        gas: 18,
+        luggage: 100,
+        food: 50
     });
 
     // --- CALCULATIONS ---
 
-    // 1. Total Car Payload
-    // Fuel @ 0.85kg/L approx, Water @ 1kg/L
     const totalCarPayload =
-        carPayload.passengers +
-        (carPayload.fuel * 0.85) +
-        carPayload.bullbar +
-        carPayload.roofRack +
-        carPayload.luggage +
-        carPayload.tools;
+        carPayloadState.passengers +
+        (carPayloadState.fuel * 0.85) +
+        carPayloadState.bullbar +
+        carPayloadState.roofRack +
+        carPayloadState.luggage +
+        carPayloadState.tools;
 
-    // 2. Total Van Payload
     const totalVanPayload =
         vanPayload.water +
         vanPayload.gas +
         vanPayload.luggage +
         vanPayload.food;
 
-    // 3. Actual Weights
     const actualVanWeight = caravan.tare + totalVanPayload;
-    // TBM is usually 10% of actual van weight if not specified, but here we let user input TBM or default it.
-    // For simplicity in this calculator, we allow TBM to be dynamic or static?
-    // Let's use the USER INPUT TBM, but validation warning if < 7% or > 15%?
-
-    // Actual Car Weight = Tare + Payload + TBM
     const actualCarWeight = vehicle.tare + totalCarPayload + caravan.tbm;
 
-    // Actual Combination
-    // GCM = Actual Car + Actual Van (Axle Load) ??
-    // Standard GCM def is Total Mass of Car + Total Mass of Trailer.
-    // Note: TBM is transferred to car, so don't double count?
-    // Mass of Car (on wheels) + Mass of Trailer (on wheels)? 
-    // GCM is simply Sum of EVERYTHING.
+    // --- REAR AXLE LOAD CALCULATION ---
+    // Formula: (Unladen Rear) + (Payload * distribution) + (TBM * (Wheelbase + Overhang) / Wheelbase)
+    // We assume 70% of car payload sits on/near the rear axle (can vary, but 0.7 is a safe tow-rig estimate)
+    const payloadOnRear = (carPayloadState.passengers * 0.4) + // passengers mostly front/middle
+        (carPayloadState.fuel * 0.5) +        // tank usually middle
+        (carPayloadState.bullbar * -0.1) +    // bullbar actually takes weight OFF rear
+        (carPayloadState.roofRack * 0.6) +
+        (carPayloadState.luggage * 0.9) +
+        (carPayloadState.tools * 0.9);
+
+    const tbmLeverage = caravan.tbm * (1 + (vehicle.overhang / vehicle.wheelbase));
+    const actualRearAxleLoad = vehicle.rearAxleTare + payloadOnRear + tbmLeverage;
+
     const actualGCM = actualCarWeight + (actualVanWeight - caravan.tbm);
-    // Wait, GCM is total mass. actualCarWeight includes TBM. (actualVanWeight - TBM) is axle load.
-    // So yes: (Tare + Payload + TBM) + (VanTare + VanPayload - TBM) = Tare + Payload + VanTare + VanPayload.
-    // Correct.
 
     // --- COMPLIANCE CHECKS ---
 
@@ -128,6 +145,13 @@ export default function TowingCalculatorPage() {
         max: vehicle.gvm,
         pct: (actualCarWeight / vehicle.gvm) * 100,
         status: actualCarWeight > vehicle.gvm ? 'ILLEGAL' : 'LEGAL'
+    };
+
+    const checkRearAxle = {
+        val: actualRearAxleLoad,
+        max: vehicle.maxRearAxle,
+        pct: (actualRearAxleLoad / vehicle.maxRearAxle) * 100,
+        status: actualRearAxleLoad > vehicle.maxRearAxle ? 'ILLEGAL' : 'LEGAL'
     };
 
     const checkGCM = {
@@ -157,8 +181,6 @@ export default function TowingCalculatorPage() {
         pct: (caravan.tbm / vehicle.maxBall) * 100,
         status: caravan.tbm > vehicle.maxBall ? 'ILLEGAL' : 'LEGAL'
     }
-
-
 
     return (
         <div className="min-h-screen bg-zinc-950 text-white p-6 md:p-12">
@@ -191,6 +213,11 @@ export default function TowingCalculatorPage() {
                                 <InputRow label="GCM (Combined Max)" val={vehicle} set={setVehicle} field="gcm" />
                                 <InputRow label="Max Towing Cap." val={vehicle} set={setVehicle} field="maxTow" />
                                 <InputRow label="Max Tow Ball Load" val={vehicle} set={setVehicle} field="maxBall" />
+                                <div className="border-t border-white/5 md:col-span-2 my-2" />
+                                <InputRow label="Rear Axle Limit" val={vehicle} set={setVehicle} field="maxRearAxle" />
+                                <InputRow label="Empty Rear Axle weight" val={vehicle} set={setVehicle} field="rearAxleTare" />
+                                <InputRow label="Wheelbase" val={vehicle} set={setVehicle} field="wheelbase" />
+                                <InputRow label="Axle to Ball distance" val={vehicle} set={setVehicle} field="overhang" />
                             </div>
                         </section>
 
@@ -203,12 +230,12 @@ export default function TowingCalculatorPage() {
                                 <span className="text-sm font-bold text-primary">{Math.round(totalCarPayload)} kg added</span>
                             </div>
                             <div className="grid md:grid-cols-2 gap-4">
-                                <InputRow label="Passengers" val={carPayload} set={setCarPayload} field="passengers" />
-                                <InputRow label="Fuel (Litres)" val={carPayload} set={setCarPayload} field="fuel" />
-                                <InputRow label="Bullbar / Winch" val={carPayload} set={setCarPayload} field="bullbar" />
-                                <InputRow label="Roof Racks" val={carPayload} set={setCarPayload} field="roofRack" />
-                                <InputRow label="Luggage / Fridge" val={carPayload} set={setCarPayload} field="luggage" />
-                                <InputRow label="Tools / Spares" val={carPayload} set={setCarPayload} field="tools" />
+                                <InputRow label="Passengers" val={carPayloadState} set={setCarPayload} field="passengers" />
+                                <InputRow label="Fuel (Litres)" val={carPayloadState} set={setCarPayload} field="fuel" />
+                                <InputRow label="Bullbar / Winch" val={carPayloadState} set={setCarPayload} field="bullbar" />
+                                <InputRow label="Roof Racks" val={carPayloadState} set={setCarPayload} field="roofRack" />
+                                <InputRow label="Luggage / Fridge" val={carPayloadState} set={setCarPayload} field="luggage" />
+                                <InputRow label="Tools / Spares" val={carPayloadState} set={setCarPayload} field="tools" />
                             </div>
                         </section>
 
@@ -251,13 +278,14 @@ export default function TowingCalculatorPage() {
                                 <h3 className="text-lg font-bold text-white mb-6">Compliance Check</h3>
 
                                 <ProgressBar pct={checkGVM.pct} val={checkGVM.val} max={checkGVM.max} label="Vehicle GVM (Car + Load + Ball)" />
+                                <ProgressBar pct={checkRearAxle.pct} val={checkRearAxle.val} max={checkRearAxle.max} label="Rear Axle Load (Lever Applied)" />
                                 <ProgressBar pct={checkATM.pct} val={checkATM.val} max={checkATM.max} label="Caravan ATM (Van + Load)" />
                                 <ProgressBar pct={checkGCM.pct} val={checkGCM.val} max={checkGCM.max} label="GCM (Combined Total)" />
                                 <ProgressBar pct={checkTowCap.pct} val={checkTowCap.val} max={checkTowCap.max} label="Towing Capacity" />
                                 <ProgressBar pct={checkBall.pct} val={checkBall.val} max={checkBall.max} label="Ball Load Limit" />
 
                                 <div className="mt-8 pt-6 border-t border-white/10 text-center">
-                                    {checkGVM.status === 'LEGAL' && checkATM.status === 'LEGAL' && checkGCM.status === 'LEGAL' && checkTowCap.status === 'LEGAL' && checkBall.status === 'LEGAL' ? (
+                                    {checkGVM.status === 'LEGAL' && checkRearAxle.status === 'LEGAL' && checkATM.status === 'LEGAL' && checkGCM.status === 'LEGAL' && checkTowCap.status === 'LEGAL' && checkBall.status === 'LEGAL' ? (
                                         <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-xl">
                                             <div className="text-3xl mb-2">✅</div>
                                             <div className="text-xl font-bold text-green-500">Legal Setup</div>
@@ -278,6 +306,7 @@ export default function TowingCalculatorPage() {
                                 <h4 className="font-bold text-white mb-2">Definitions</h4>
                                 <ul className="space-y-2">
                                     <li><strong className="text-zinc-300">GVM:</strong> Gross Vehicle Mass. Max weight of your car including everything in it + the tow ball weight.</li>
+                                    <li><strong className="text-zinc-300">Rear Axle Load:</strong> The weight on the back tyres. This increases significantly due to the "lever effect" of the tow ball.</li>
                                     <li><strong className="text-zinc-300">ATM:</strong> Aggregate Trailer Mass. Max weight of your van when unhitched.</li>
                                     <li><strong className="text-zinc-300">GCM:</strong> Gross Combination Mass. Max weight of the entire rig on the road.</li>
                                 </ul>

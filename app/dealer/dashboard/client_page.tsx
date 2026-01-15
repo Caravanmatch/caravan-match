@@ -245,6 +245,23 @@ export default function DealerDashboardClient({ dealer, tenders, stats }: { deal
                                                     tender.status === 'IN_PROGRESS' ? 'bg-amber-500/10 text-amber-500' : 'bg-blue-500/10 text-blue-500'}`}>
                                                 {tender.status.replace('_', ' ')}
                                             </span>
+
+                                            {tender.status === 'OPEN' && tender.expiresAt && (
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border animate-pulse
+                                                    ${new Date(tender.expiresAt).getTime() - Date.now() < 24 * 60 * 60 * 1000
+                                                        ? 'bg-red-500/20 text-red-400 border-red-500/30'
+                                                        : 'bg-amber-500/20 text-amber-400 border-amber-500/30'}`}>
+                                                    ⏳ {(() => {
+                                                        const diff = new Date(tender.expiresAt).getTime() - Date.now();
+                                                        if (diff <= 0) return 'Expired';
+                                                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                                                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                        if (days > 0) return `${days}d ${hours}h left`;
+                                                        return `${hours}h left`;
+                                                    })()}
+                                                </span>
+                                            )}
+
                                             <span className="text-xs text-muted">
                                                 {new Date(tender.createdAt).toLocaleDateString()}
                                             </span>
@@ -301,164 +318,166 @@ export default function DealerDashboardClient({ dealer, tenders, stats }: { deal
                         ))
                     )}
                 </div>
-            </main>
+            </main >
 
             {/* View Specs Modal */}
-            {viewingTender && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-                    <div className="bg-surface border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <div>
-                                <h3 className="text-xl font-bold text-white">Full Build Specifications</h3>
-                                <p className="text-sm text-muted">tender-{viewingTender.id.slice(-6)}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={async () => {
-                                        if (confirm("WARNING: Are you sure you want to delete this tender? This will remove it for EVERYONE (including the customer).")) {
-                                            try {
-                                                const res = await fetch(`/api/tenders/${viewingTender.id}`, { method: 'DELETE' });
-                                                if (res.ok) {
-                                                    alert("Tender deleted.");
-                                                    setViewingTender(null);
-                                                    router.refresh();
-                                                } else {
-                                                    alert("Failed to delete.");
+            {
+                viewingTender && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+                        <div className="bg-surface border border-white/10 rounded-2xl w-full max-w-2xl p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+                            <div className="flex justify-between items-center mb-6">
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">Full Build Specifications</h3>
+                                    <p className="text-sm text-muted">tender-{viewingTender.id.slice(-6)}</p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={async () => {
+                                            if (confirm("WARNING: Are you sure you want to delete this tender? This will remove it for EVERYONE (including the customer).")) {
+                                                try {
+                                                    const res = await fetch(`/api/tenders/${viewingTender.id}`, { method: 'DELETE' });
+                                                    if (res.ok) {
+                                                        alert("Tender deleted.");
+                                                        setViewingTender(null);
+                                                        router.refresh();
+                                                    } else {
+                                                        alert("Failed to delete.");
+                                                    }
+                                                } catch (err) {
+                                                    console.error(err);
+                                                    alert("Error deleting.");
                                                 }
-                                            } catch (err) {
-                                                console.error(err);
-                                                alert("Error deleting.");
                                             }
-                                        }
-                                    }}
-                                    className="p-2 hover:bg-red-500/10 hover:text-red-500 text-muted rounded-full transition"
-                                    title="Delete Tender"
-                                >
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                                <button onClick={() => setViewingTender(null)} className="p-2 hover:bg-white/10 rounded-full transition">✕</button>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Key Stats */}
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10 md:col-span-2 flex justify-between items-center">
-                                <div>
-                                    <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">Target Date</div>
-                                    <div className="text-white font-medium">{viewingTender.targetDate || 'Flexible'}</div>
-                                </div>
-                                <div>
-                                    <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">Location</div>
-                                    <div className="text-white font-medium">{viewingTender.customerPostcode || 'Australia'}</div>
-                                </div>
-                                <div>
-                                    <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">Tow Vehicle</div>
-                                    <div className="text-white font-medium">{viewingTender.tow_vehicle || 'Not Specified'}</div>
+                                        }}
+                                        className="p-2 hover:bg-red-500/10 hover:text-red-500 text-muted rounded-full transition"
+                                        title="Delete Tender"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                    <button onClick={() => setViewingTender(null)} className="p-2 hover:bg-white/10 rounded-full transition">✕</button>
                                 </div>
                             </div>
 
-                            {/* Dynamic Fields */}
-                            {[
-                                { label: 'Type', value: viewingTender.type },
-                                { label: 'Length', value: viewingTender.length },
-                                { label: 'Frame', value: viewingTender.frame },
-                                { label: 'Solar', value: viewingTender.solar },
-                                { label: 'Batteries', value: viewingTender.batteries },
-                                { label: 'Inverter', value: viewingTender.inverter },
-                                { label: 'Water', value: viewingTender.water_tanks },
-                                { label: 'Hot Water', value: viewingTender.hot_water },
-                                { label: 'Toilet', value: viewingTender.toilet },
-                                { label: 'Beds', value: viewingTender.bed },
-                                { label: 'Kids Beds', value: viewingTender.kids_beds },
-                                { label: 'Fridge', value: viewingTender.fridge_size },
-                                { label: 'Fridge Type', value: viewingTender.fridge_type },
-                                { label: 'AC', value: viewingTender.ac },
-                                { label: 'Diesel Heater', value: viewingTender.diesel_heater },
-                                { label: 'Ext. Shower', value: viewingTender.external_shower },
-                                { label: 'Awning', value: viewingTender.electric_awning },
-                                { label: 'Auto Level', value: viewingTender.auto_level },
-                                { label: 'Fixtures', value: viewingTender.fixtures },
-                            ].map((field) => field.value && (
-                                <div key={field.label} className="border-b border-white/5 pb-2">
-                                    <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">{field.label}</div>
-                                    <div className="text-white">{field.value}</div>
-                                </div>
-                            ))}
-
-                            {/* Appliances List */}
-                            {viewingTender.appliances && (
-                                <div className="md:col-span-2">
-                                    <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Requested Appliances</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {(() => {
-                                            try {
-                                                const apps = typeof viewingTender.appliances === 'string'
-                                                    ? JSON.parse(viewingTender.appliances)
-                                                    : viewingTender.appliances;
-                                                return Array.isArray(apps) && apps.length > 0 ? apps.map((a: string) => (
-                                                    <span key={a} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded border border-primary/20">
-                                                        {a.replace(/_/g, ' ')}
-                                                    </span>
-                                                )) : <span className="text-zinc-500 text-sm">None selected</span>
-                                            } catch (e) {
-                                                return <span className="text-zinc-500 text-sm">None selected</span>
-                                            }
-                                        })()}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Key Stats */}
+                                <div className="bg-white/5 rounded-xl p-4 border border-white/10 md:col-span-2 flex justify-between items-center">
+                                    <div>
+                                        <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">Target Date</div>
+                                        <div className="text-white font-medium">{viewingTender.targetDate || 'Flexible'}</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">Location</div>
+                                        <div className="text-white font-medium">{viewingTender.customerPostcode || 'Australia'}</div>
+                                    </div>
+                                    <div>
+                                        <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">Tow Vehicle</div>
+                                        <div className="text-white font-medium">{viewingTender.tow_vehicle || 'Not Specified'}</div>
                                     </div>
                                 </div>
-                            )}
 
-                            {/* Outdoor Kitchen List */}
-                            {viewingTender.outdoor_kitchen && (
-                                <div className="md:col-span-2">
-                                    <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Outdoor Kitchen</div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {(() => {
-                                            try {
-                                                const items = typeof viewingTender.outdoor_kitchen === 'string'
-                                                    ? JSON.parse(viewingTender.outdoor_kitchen)
-                                                    : viewingTender.outdoor_kitchen;
-                                                return Array.isArray(items) && items.length > 0 ? items.map((a: string) => (
-                                                    <span key={a} className="px-2 py-1 bg-amber-500/10 text-amber-500 text-xs rounded border border-amber-500/20">
-                                                        {a.replace(/_/g, ' ')}
-                                                    </span>
-                                                )) : <span className="text-zinc-500 text-sm">None specific</span>
-                                            } catch (e) {
-                                                return <span className="text-zinc-500 text-sm">None specific</span>
-                                            }
-                                        })()}
+                                {/* Dynamic Fields */}
+                                {[
+                                    { label: 'Type', value: viewingTender.type },
+                                    { label: 'Length', value: viewingTender.length },
+                                    { label: 'Frame', value: viewingTender.frame },
+                                    { label: 'Solar', value: viewingTender.solar },
+                                    { label: 'Batteries', value: viewingTender.batteries },
+                                    { label: 'Inverter', value: viewingTender.inverter },
+                                    { label: 'Water', value: viewingTender.water_tanks },
+                                    { label: 'Hot Water', value: viewingTender.hot_water },
+                                    { label: 'Toilet', value: viewingTender.toilet },
+                                    { label: 'Beds', value: viewingTender.bed },
+                                    { label: 'Kids Beds', value: viewingTender.kids_beds },
+                                    { label: 'Fridge', value: viewingTender.fridge_size },
+                                    { label: 'Fridge Type', value: viewingTender.fridge_type },
+                                    { label: 'AC', value: viewingTender.ac },
+                                    { label: 'Diesel Heater', value: viewingTender.diesel_heater },
+                                    { label: 'Ext. Shower', value: viewingTender.external_shower },
+                                    { label: 'Awning', value: viewingTender.electric_awning },
+                                    { label: 'Auto Level', value: viewingTender.auto_level },
+                                    { label: 'Fixtures', value: viewingTender.fixtures },
+                                ].map((field) => field.value && (
+                                    <div key={field.label} className="border-b border-white/5 pb-2">
+                                        <div className="text-xs font-bold text-muted uppercase tracking-wider mb-1">{field.label}</div>
+                                        <div className="text-white">{field.value}</div>
                                     </div>
-                                </div>
-                            )}
+                                ))}
 
-                            {/* Final Thoughts */}
-                            {viewingTender.final_comments && (
-                                <div className="md:col-span-2 bg-blue-500/5 border border-blue-500/20 p-4 rounded-xl mt-2">
-                                    <div className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2">Customer Notes</div>
-                                    <div className="text-sm text-zinc-300 italic">"{viewingTender.final_comments}"</div>
-                                </div>
-                            )}
-                        </div>
+                                {/* Appliances List */}
+                                {viewingTender.appliances && (
+                                    <div className="md:col-span-2">
+                                        <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Requested Appliances</div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {(() => {
+                                                try {
+                                                    const apps = typeof viewingTender.appliances === 'string'
+                                                        ? JSON.parse(viewingTender.appliances)
+                                                        : viewingTender.appliances;
+                                                    return Array.isArray(apps) && apps.length > 0 ? apps.map((a: string) => (
+                                                        <span key={a} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded border border-primary/20">
+                                                            {a.replace(/_/g, ' ')}
+                                                        </span>
+                                                    )) : <span className="text-zinc-500 text-sm">None selected</span>
+                                                } catch (e) {
+                                                    return <span className="text-zinc-500 text-sm">None selected</span>
+                                                }
+                                            })()}
+                                        </div>
+                                    </div>
+                                )}
 
-                        <div className="mt-8 pt-6 border-t border-white/10 flex justify-end gap-3">
-                            <button onClick={() => setViewingTender(null)} className="px-4 py-2 hover:text-white text-muted transition">Close</button>
-                            {viewingTender.status === 'OPEN' && (
-                                <button
-                                    onClick={() => {
-                                        setViewingTender(null);
-                                        setQuotingTender(viewingTender);
-                                    }}
-                                    className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover shadow-lg"
-                                >
-                                    Start Quote
-                                </button>
-                            )}
+                                {/* Outdoor Kitchen List */}
+                                {viewingTender.outdoor_kitchen && (
+                                    <div className="md:col-span-2">
+                                        <div className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Outdoor Kitchen</div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {(() => {
+                                                try {
+                                                    const items = typeof viewingTender.outdoor_kitchen === 'string'
+                                                        ? JSON.parse(viewingTender.outdoor_kitchen)
+                                                        : viewingTender.outdoor_kitchen;
+                                                    return Array.isArray(items) && items.length > 0 ? items.map((a: string) => (
+                                                        <span key={a} className="px-2 py-1 bg-amber-500/10 text-amber-500 text-xs rounded border border-amber-500/20">
+                                                            {a.replace(/_/g, ' ')}
+                                                        </span>
+                                                    )) : <span className="text-zinc-500 text-sm">None specific</span>
+                                                } catch (e) {
+                                                    return <span className="text-zinc-500 text-sm">None specific</span>
+                                                }
+                                            })()}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Final Thoughts */}
+                                {viewingTender.final_comments && (
+                                    <div className="md:col-span-2 bg-blue-500/5 border border-blue-500/20 p-4 rounded-xl mt-2">
+                                        <div className="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2">Customer Notes</div>
+                                        <div className="text-sm text-zinc-300 italic">"{viewingTender.final_comments}"</div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mt-8 pt-6 border-t border-white/10 flex justify-end gap-3">
+                                <button onClick={() => setViewingTender(null)} className="px-4 py-2 hover:text-white text-muted transition">Close</button>
+                                {viewingTender.status === 'OPEN' && (
+                                    <button
+                                        onClick={() => {
+                                            setViewingTender(null);
+                                            setQuotingTender(viewingTender);
+                                        }}
+                                        className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover shadow-lg"
+                                    >
+                                        Start Quote
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }

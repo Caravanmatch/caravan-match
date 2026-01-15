@@ -23,6 +23,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
         category: '',
         year: '',
         make: '',
+        customMake: '',
         model: '',
         length: '',
         sleeps: '2',
@@ -34,7 +35,8 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
         phone: dealer?.phone || '',
         suburb: '',
         state: '',
-        videoUrl: ''
+        videoUrl: '',
+        promoCode: ''
     });
 
     // Validated photos state
@@ -114,6 +116,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
             // Construct payload
             const payload = {
                 ...formData,
+                make: formData.make === 'Other' ? formData.customMake : formData.make,
                 images: uploadedImageUrls,
                 location: `${formData.suburb}, ${formData.state}`.replace(/^, /, '').replace(/, $/, '') // Combine suburb and state
             };
@@ -139,7 +142,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                 const payRes = await fetch('/api/stripe/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ listingId: data.id })
+                    body: JSON.stringify({ listingId: data.id, promoCode: formData.promoCode })
                 });
 
                 if (payRes.ok) {
@@ -373,7 +376,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                     <div className="bg-surface border border-white/10 rounded-2xl p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4">
                         <h2 className="text-2xl font-bold border-b border-white/10 pb-4">1. Caravan Details</h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
 
                             {/* Condition (Available to all) */}
                             <div className="space-y-2 col-span-2">
@@ -417,6 +420,22 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                                     ))}
                                 </select>
                             </div>
+
+                            {/* Custom Make Input (Only if 'Other' is selected) */}
+                            {formData.make === 'Other' && (
+                                <div className="space-y-2 mt-4">
+                                    <label className="text-sm font-medium text-zinc-400">Specify Make</label>
+                                    <input
+                                        name="customMake"
+                                        value={formData.customMake || ''}
+                                        onChange={handleInputChange}
+                                        type="text"
+                                        placeholder="e.g. Vintage Viscount"
+                                        className="w-full bg-black border border-white/10 rounded-lg p-3 text-white outline-none focus:border-primary transition"
+                                    />
+                                </div>
+                            )}
+
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Model</label>
                                 <input name="model" value={formData.model} onChange={handleInputChange} type="text" placeholder="e.g. Journey Outback" className="w-full bg-background border border-white/10 rounded-lg p-3 outline-none focus:border-primary" />
@@ -444,7 +463,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                             </div>
                         </div>
 
-                        <button onClick={handleNext} className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition mt-4">
+                        <button onClick={handleNext} className="w-full py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition mt-4">
                             Next: Photos & Description &rarr;
                         </button>
                     </div>
@@ -536,7 +555,7 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                             <button onClick={() => setStep(1)} className="flex-1 py-4 bg-white/5 text-white font-bold rounded-xl hover:bg-white/10 transition">
                                 &larr; Back
                             </button>
-                            <button onClick={handleNext} className="flex-1 py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover transition">
+                            <button onClick={handleNext} className="flex-1 py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover transition">
                                 Next: Contact Details &rarr;
                             </button>
                         </div>
@@ -598,6 +617,19 @@ export default function AdvertisePage({ dealer }: { dealer?: any }) {
                                     ))}
                                 </select>
                             </div>
+                        </div>
+
+                        {/* Promo Code */}
+                        <div className="space-y-2 mt-4">
+                            <label className="text-sm font-medium text-purple-400">Have a Promo Code?</label>
+                            <input
+                                name="promoCode"
+                                value={formData.promoCode || ''}
+                                onChange={handleInputChange}
+                                type="text"
+                                placeholder="Enter code (Optional)"
+                                className="w-full bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 outline-none focus:border-purple-500 uppercase tracking-widest font-mono"
+                            />
                         </div>
 
                         <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-xl text-center mt-6">

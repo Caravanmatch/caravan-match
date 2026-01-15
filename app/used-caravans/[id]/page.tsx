@@ -169,6 +169,7 @@ export default async function ListingDetailPage({ params }: Props) {
                         {/* Client Contact Component */}
                         <ListingContactForm vanTitle={`${listing.year} ${listing.make}`} sellerEmail={listing.sellerEmail} listingId={listing.id} />
 
+
                         <p className="text-xs text-center text-muted mt-4">
                             By sending, you agree to our Terms.
                         </p>

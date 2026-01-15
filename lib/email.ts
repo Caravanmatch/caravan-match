@@ -91,9 +91,9 @@ export const EmailTemplates = {
         <div style="background: #f4f4f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <h3 style="margin-top:0;">Your Plan:</h3>
             <ul style="padding-left: 20px;">
-                <li>✅ <strong>First 30 Days:</strong> 100% FREE (Trial)</li>
-                <li>✅ <strong>Next 6 Months:</strong> 50% OFF (Discount Locked In)</li>
-                <li>✅ <strong>After 7 Months:</strong> Standard Rate applies</li>
+                <li>✅ <strong>First 6 Months:</strong> 100% FREE (Extended Trial)</li>
+                <li>✅ <strong>Next 3 Months:</strong> 50% OFF (Discount Locked In)</li>
+                <li>✅ <strong>After 9 Months:</strong> Standard Rate applies</li>
             </ul>
         </div>
 

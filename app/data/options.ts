@@ -61,34 +61,48 @@ export const CARAVAN_OPTIONS = {
   ],
   solar: [
     {
-      id: 'lt_500w',
-      label: 'Less than 500W',
-      description: 'Standard setup. Keeps the lights and fridge running.',
-      pros: ['Cheaper', 'Sufficient for basic needs'],
-      cons: ['Cannot support heavy appliances', 'Relies on sun availability']
+      id: 'lt_400w',
+      label: 'Less than 400W',
+      description: 'Basic setup. Keeps the lights and fridge running for weekenders.',
+      pros: ['Lower cost', 'Sufficient for park hoppers'],
+      cons: ['Limited off-grid capability', 'Relies heavily on sun']
     },
     {
-      id: 'gt_500w',
-      label: 'More than 500W',
-      description: 'For serious off-grid living. Run more for longer.',
-      pros: ['Faster battery charging', 'Run simple AC loads during day'],
-      cons: ['Requires roof space', 'More expensive']
+      id: '400_800w',
+      label: '400W - 800W',
+      description: 'Standard off-grid setup. The sweet spot for most travelers.',
+      pros: ['Balanced cost/performance', 'Handles most appliances', 'Good battery charging'],
+      cons: ['Moderate roof space needed']
+    },
+    {
+      id: 'gt_800w',
+      label: 'More than 800W',
+      description: 'Off-Grid Pro. Run everything, even in cloudy conditions.',
+      pros: ['Maximum independence', 'Fast charging', 'Run AC during day'],
+      cons: ['Expensive', 'Requires significant roof space']
     },
   ],
   batteries: [
     {
-      id: 'lt_300ah',
-      label: 'Less than 300Ah',
-      description: 'Good for weekenders and park hoppers.',
-      pros: ['Lower cost', 'Lighter weight'],
-      cons: ['Limited off-grid time', 'Cannot run A/C for long']
+      id: 'lt_200ah',
+      label: 'Less than 200Ah',
+      description: 'Weekender setup. Good for powered sites and short trips.',
+      pros: ['Lowest cost', 'Lightest weight'],
+      cons: ['Very limited off-grid time', 'Cannot run heavy loads']
     },
     {
-      id: 'gt_300ah',
-      label: 'More than 300Ah',
-      description: 'True off-grid capability. Run the coffee machine and toaster.',
-      pros: ['Extended off-grid stays', 'High discharge rates for inverters'],
-      cons: ['Expensive', 'Heavier']
+      id: '200_400ah',
+      label: '200Ah - 400Ah',
+      description: 'Standard off-grid setup. The most common choice for serious travelers.',
+      pros: ['Balanced cost/capacity', '2-3 days off-grid', 'Run most appliances'],
+      cons: ['Moderate weight and cost']
+    },
+    {
+      id: 'gt_400ah',
+      label: 'More than 400Ah',
+      description: 'Off-Grid Pro. Extended stays without charging.',
+      pros: ['Maximum independence', 'Run A/C overnight', '4+ days off-grid'],
+      cons: ['Heavy', 'Very expensive']
     },
   ],
   inverters: [
@@ -254,7 +268,7 @@ export const CARAVAN_OPTIONS = {
   ],
   beds: [
     { id: 'king', label: 'King' },
-    { id: 'king_drop_club', label: 'King Drop Down over Club Lounge' },
+    { id: 'king_drop_club', label: 'Drop Down Bed over Club Lounge' },
     { id: 'queen', label: 'Queen' },
     { id: 'double', label: 'Double' },
   ],

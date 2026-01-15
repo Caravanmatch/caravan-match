@@ -120,7 +120,7 @@ export default function RegisterPage() {
                         </div>
                     </div>
 
-                    <button disabled={loading} className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary-hover shadow-lg shadow-primary/20 transition mt-4">
+                    <button disabled={loading} className="w-full py-4 bg-primary text-white font-bold rounded-xl border-2 border-white hover:bg-primary-hover shadow-lg shadow-primary/20 transition mt-4">
                         {loading ? 'Creating Account...' : 'Sign Up'}
                     </button>
                 </form>
