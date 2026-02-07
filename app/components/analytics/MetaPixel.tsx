@@ -11,6 +11,9 @@ const MetaPixel = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    // Prevent crash if ID is missing (e.g. env var not set)
+    if (!pixel.FB_PIXEL_ID) return null;
+
     useEffect(() => {
         if (!loaded) return;
         pixel.pageview();
