@@ -496,7 +496,12 @@ export default function UsedCaravansPage() {
                                     {/* Image Placeholder */}
                                     <div className="h-56 bg-zinc-800 relative overflow-hidden">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img src={van.images?.split(',')[0]} alt={van.model} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100" />
+                                        <img
+                                            src={Array.isArray(van.images) ? van.images[0] : (typeof van.images === 'string' ? van.images.split(',')[0] : '/placeholder.jpg')}
+                                            alt={van.model}
+                                            loading="lazy"
+                                            className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100"
+                                        />
 
                                         <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] uppercase font-bold px-2 py-1 rounded border border-white/10">
                                             {van.condition || van.status}
